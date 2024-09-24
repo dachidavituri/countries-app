@@ -1,0 +1,10 @@
+.cardImg {
+  width: 100%;
+  height: 225px;
+}
+.cardInfo {
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
