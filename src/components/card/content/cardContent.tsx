@@ -1,4 +1,4 @@
-import { Country } from "../../../info";
+import { Country } from "@/info";
 import styles from "./cardContent.module.css";
 interface CardContentProps {
   country: Country;

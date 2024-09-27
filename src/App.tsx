@@ -1,14 +1,27 @@
-import "./App.css";
-import Header from "./components/header/header";
-import Hero from "./components/hero/hero";
-import Card from "./components/card/card";
+import "@/App.css";
+import Hero from "$/hero";
+import Card from "$/card";
+import CardContent from "$/card/content";
+import CardHeader from "$/card/header";
+import CardFooter from "$/card/footer";
+import Layout from "$/layout";
+import { countries } from "@/info";
 
 const App: React.FC = () => {
   return (
     <div className="App">
-      <Header />
-      <Hero />
-      <Card />
+      <Layout>
+        <Hero />
+        <Card countries={countries}>
+          {(country) => (
+            <>
+              <CardHeader />
+              <CardContent country={country} />
+              <CardFooter link={country.infoLink} />
+            </>
+          )}
+        </Card>
+      </Layout>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { categories } from "../../info";
+import { categories } from "@/info";
 import styles from "./header.module.css";
 const Header: React.FC = () => {
   return (

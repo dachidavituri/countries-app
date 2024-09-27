@@ -1,4 +1,4 @@
-import travelImg from "../../assets/360_F_319746107_n99b20pTyXt8xYJXQqVBI5dJVttUANFn.jpg";
+import travelImg from "&/360_F_319746107_n99b20pTyXt8xYJXQqVBI5dJVttUANFn.jpg";
 import styles from "./hero.module.css";
 const Hero: React.FC = () => {
   return (
