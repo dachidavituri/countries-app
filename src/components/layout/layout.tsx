@@ -1,13 +1,16 @@
 import React from "react";
-import Header from "$/header";
-import Footer from "$/footer";
-import { PropsWithChildren } from "react";
+import Header from "$/base/header";
+import Footer from "$/base/footer";
+import PageOutlet from "$/base/pageOutlet";
+import { Outlet } from "react-router-dom";
 
-const Layout: React.FC<PropsWithChildren> = ({ children }) => {
+const Layout: React.FC = () => {
   return (
     <>
       <Header />
-      {children}
+      <PageOutlet>
+        <Outlet />
+      </PageOutlet>
       <Footer />
     </>
   );

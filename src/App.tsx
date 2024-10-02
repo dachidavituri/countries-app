@@ -1,29 +1,34 @@
 import "@/App.css";
-import Hero from "$/hero";
-import Card from "$/card";
-import CardContent from "$/card/content";
-import CardHeader from "$/card/header";
-import CardFooter from "$/card/footer";
 import Layout from "$/layout";
-import { countries } from "@/info";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePageView from "^/home/views/home";
+import AboutPageView from "^/about/views/about";
+import ServicePageView from "^/services/views/service";
+import Loading from "$/base/loading";
+import { Suspense } from "react";
 
 const App: React.FC = () => {
   return (
     <div className="App">
-      <Layout>
-        <Hero />
-        <Card countries={countries}>
-          {(country) => (
-            <>
-              <CardHeader />
-              <CardContent country={country} />
-              <CardFooter link={country.infoLink} />
-            </>
-          )}
-        </Card>
-      </Layout>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route
+              path="/"
+              element={
+                <Suspense fallback={<Loading />}>
+                  <HomePageView />
+                </Suspense>
+              }
+            />
+            <Route path="/about" element={<AboutPageView />}></Route>
+            <Route path="/services" element={<ServicePageView />}></Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 };
+
 
 export default App;

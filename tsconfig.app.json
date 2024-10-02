@@ -25,7 +25,8 @@
       "@/*": ["./src/*"],
       "~/*": ["./*"],
       "$/*": ["./src/components/*"],
-      "&/*": ["./src/assets/*"]
+      "&/*": ["./src/assets/*"],
+      "^/*": ["./src/pages/*"]
     }
   },
   "include": ["src"]

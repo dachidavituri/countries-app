@@ -1,5 +1,5 @@
 import styles from "./card.module.css";
-import { Country } from "../../info";
+import { Country } from "@/info";
 
 interface CardProps {
   children: (country: Country) => React.ReactNode;

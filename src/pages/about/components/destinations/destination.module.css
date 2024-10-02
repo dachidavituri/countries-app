@@ -1,0 +1,28 @@
+.destinationList {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.destination {
+  background: #e4efdb;
+  padding: 15px;
+  margin: 10px;
+  flex: 1 1 calc(30% - 20px);
+  border-radius: 5px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+.smallTitle {
+  font-size: 1.8rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #e0b311;
+}
+.desc {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+.destinations {
+  margin: 20px 0;
+}

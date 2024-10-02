@@ -20,5 +20,14 @@ header {
   cursor: pointer;
 }
 .navItem {
+  font-size: 20px;
   list-style-type: none;
+}
+.active {
+  color: red;
+  text-decoration: none;
+}
+.notActive {
+  text-decoration: none;
+  color: #756161;
 }

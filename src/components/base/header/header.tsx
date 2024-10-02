@@ -1,6 +1,11 @@
 import { categories } from "@/info";
+import { NavLink } from "react-router-dom";
 import styles from "./header.module.css";
 const Header: React.FC = () => {
+  const handleIsActive = ({ isActive }: { isActive: boolean }) => {
+    return isActive ? styles.active : styles.notActive;
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.headerContainer}>
@@ -9,7 +14,9 @@ const Header: React.FC = () => {
           <ul className={styles.navList}>
             {categories.map((category, index) => (
               <li key={index} className={styles.navItem}>
-                {category}
+                <NavLink to={category.path} className={handleIsActive}>
+                  {category.name}
+                </NavLink>
               </li>
             ))}
           </ul>
