@@ -6,10 +6,25 @@ interface Categories {
   name: string;
   path: string;
 }
+interface DetailedInfo {
+  id: string;
+  officialName: string;
+  capital: string;
+  population: number;
+  area: number;
+  region: string;
+  officialLanguage: string;
+  currency: string;
+  majorCities: string;
+  cuisineDescription: string;
+  independenceDay: string;
+  img: string;
+}
 export const categories: Categories[] = [
   { name: "main", path: "/" },
   { name: "about", path: "/about" },
   { name: "services", path: "/services" },
+  { name: "contact", path: "/contact" },
 ];
 export interface Country {
   id: number;
@@ -27,6 +42,53 @@ export interface Destionation {
   continent: string;
   description: string;
 }
+export const detailedInfo: DetailedInfo[] = [
+  {
+    id: "1",
+    officialName: "Georgia",
+    capital: "Tbilisi",
+    population: 3688647,
+    area: 69700,
+    region: "Eurasia",
+    officialLanguage: "Georgian",
+    currency: "Georgian Lari (GEL)",
+    majorCities: "Tbilisi, Batumi, Kutaisi, Rustavi, Zugdidi",
+    cuisineDescription:
+      "Georgian cuisine is known for its rich flavors and unique dishes, featuring a variety of fresh herbs and spices. Notable foods include khachapuri (cheese-filled bread), khinkali (dumplings), and pkhali (vegetable spreads). The country is also famous for its wine, with a winemaking tradition that dates back thousands of years, particularly in the Kakheti region.",
+    independenceDay: "May 26 (Independence Day)",
+    img: georgiaFlag,
+  },
+  {
+    id: "2",
+    officialName: "Federal Republic of Germany",
+    capital: "Berlin",
+    population: 82719540,
+    area: 357022,
+    region: "Europe",
+    officialLanguage: "German",
+    currency: "Euro (€)",
+    majorCities: "Berlin, Munich, Frankfurt, Hamburg, Cologne",
+    cuisineDescription:
+      "German cuisine is diverse and hearty, known for its variety of sausages, bread, and regional dishes. Popular foods include bratwurst, sauerkraut, pretzels, and schnitzel, complemented by a wide range of regional beers. Each area has its own specialties, reflecting local traditions and ingredients.",
+    independenceDay: "October 3 (German Unity Day)",
+    img: germanyFlag,
+  },
+  {
+    id: "3",
+    officialName: "French Republic",
+    capital: "Paris",
+    population: 68373433,
+    area: 551695,
+    region: "Europe",
+    officialLanguage: "French",
+    currency: "Euro (€)",
+    majorCities: "Paris, Marseille, Lyon, Toulouse, Nice",
+    cuisineDescription:
+      "French cuisine is renowned worldwide for its diversity and quality, featuring a wide array of regional dishes and cooking styles, from rich sauces and gourmet pastries to fresh seafood and exquisite wines. Notable dishes include coq au vin, bouillabaisse, and various types of cheese.",
+    independenceDay: "July 14 (Bastille Day)",
+    img: franceFlag,
+  },
+];
 export const services: Service[] = [
   {
     title: "Personalized Travel Planning",
@@ -50,8 +112,9 @@ export const services: Service[] = [
   },
   {
     title: "Travel Safety and Security",
-    description: "We offer resources and advice to keep you safe during your travels, including emergency contact information and safety tips."
-  }
+    description:
+      "We offer resources and advice to keep you safe during your travels, including emergency contact information and safety tips.",
+  },
 ];
 export const destionation: Destionation[] = [
   {

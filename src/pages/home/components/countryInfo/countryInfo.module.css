@@ -1,0 +1,46 @@
+.countryInfo {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.countryName {
+  font-size: 2.8em;
+  color: #e0b311;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.countryCapital {
+  font-size: 2em;
+  color: rgb(173, 148, 5);
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.countryDetails {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.countryDetails li {
+  font-size: 1.2em;
+  color: #555;
+  line-height: 1.6;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 10px 0;
+}
+.countryInfo img{
+    width: 30px;
+}
+.countryDetails li:last-child {
+  border-bottom: none;
+}
+
+.countryDetails strong {
+  color: #2c3e50;
+}

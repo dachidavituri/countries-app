@@ -1,10 +1,7 @@
-import { lazy } from "react";
-const Card = lazy(() => import("^/home/components/card"));
-const CardContent = lazy(() => import("^/home/components/card/content"));
-const CardFooter = lazy(() => import("^/home/components/card/footer"));
-const CardHeader = lazy(() => import("^/home/components/card/header"));
-const Hero = lazy(() => import("^/home/components/hero"));
-
+import Card from "^/home/components/card";
+import CardContent from "^/home/components/card/content";
+import CardHeader from "^/home/components/card/header";
+import Hero from "^/home/components/hero";
 import { countries } from "@/info";
 const HomePageView: React.FC = () => {
   return (
@@ -15,7 +12,6 @@ const HomePageView: React.FC = () => {
           <>
             <CardHeader />
             <CardContent country={country} />
-            <CardFooter link={country.infoLink} />
           </>
         )}
       </Card>
