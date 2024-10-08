@@ -3,6 +3,7 @@
   margin: 100px auto 0;
   display: flex;
   gap: 10px;
+  flex-direction: column;
 }
 .countryCard {
   width: calc(1100px / 3);
@@ -10,4 +11,9 @@
   border: 2px solid #e58a8a;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.countries{
+  display: flex;
+  gap: 10px;
 }

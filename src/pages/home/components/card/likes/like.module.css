@@ -1,0 +1,13 @@
+.like {
+  width: 20px;
+  cursor: pointer;
+}
+
+.likeSection {
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+}
+.likeSection span {
+  font-size: 20px;
+}

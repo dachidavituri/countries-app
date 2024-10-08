@@ -33,6 +33,7 @@ export interface Country {
   name: string;
   capitalCity: string;
   population: number;
+  like: number
 }
 export interface Service {
   title: string;
@@ -139,6 +140,7 @@ export const countries: Country[] = [
     name: "Georgia",
     capitalCity: "Tbilisi",
     population: 3688647,
+    like: 0
   },
   {
     id: 2,
@@ -147,6 +149,7 @@ export const countries: Country[] = [
     name: "Germany",
     capitalCity: "Berlin",
     population: 82719540,
+    like: 0
   },
   {
     id: 3,
@@ -155,5 +158,6 @@ export const countries: Country[] = [
     name: "France",
     capitalCity: "Paris",
     population: 68373433,
+    like: 0
   },
 ];

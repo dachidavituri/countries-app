@@ -24,7 +24,7 @@ const App: React.FC = () => {
                 </Suspense>
               }
             />
-            <Route path="/:id" element={<CountryInfoView />}></Route>
+            <Route path="/country/:id" element={<CountryInfoView />}></Route>
             <Route path="/about" element={<AboutPageView />}></Route>
             <Route path="/services" element={<ServicePageView />}></Route>
             <Route path="/contact" element={<ContactFormView />}></Route>
