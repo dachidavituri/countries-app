@@ -6,14 +6,29 @@
   flex-direction: column;
 }
 .countryCard {
-  width: calc(1100px / 3);
+  width: calc(1100px / 3 - 10px);
   background-color: white;
   border: 2px solid #e58a8a;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
-
-.countries{
+.countries {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
+.likeDelete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px 10px 10px;
+}
+.deleted {
+  background-color: rgb(157, 143, 143);
+}
+.additional {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+

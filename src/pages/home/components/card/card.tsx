@@ -1,54 +1,99 @@
 import styles from "./card.module.css";
+import CardFooter from "./footer";
+import Like from "./likes";
+import Sort from "./btnsSort";
+import Form from "./form";
+import Delete from "./delete";
+import Restore from "./restore";
 import { Country } from "@/info";
 import { Link } from "react-router-dom";
-import CardFooter from "./footer";
-import { useState } from "react";
+import { useReducer } from "react";
 import { countries } from "@/info";
-import Like from "./likes";
-import Sort from "^/home/components/btnsSort";
+import { reducer } from "^/home/components/card/reducer";
+import { FormEvent } from "react";
+
 interface CardProps {
   children: (country: Country) => React.ReactNode;
 }
 const Card: React.FC<CardProps> = ({ children }) => {
-  const [countriesList, setCountriesList] = useState(countries);
+  const [countriesList, dispatch] = useReducer(reducer, countries);
   const handleCountryUpvote = (id: number) => {
-    const updatedCountryList = countriesList.map((country) => {
-      if (country.id === id) {
-        return { ...country, like: country.like + 1 };
-      }
-      return { ...country };
-    });
-    setCountriesList(updatedCountryList);
+    dispatch({ type: "upvote", payload: { id } });
   };
-  const sortCountriesAsc = () => {
-    const sorted = [...countriesList].sort((a, b) => a.like - b.like);
-    setCountriesList(sorted);
+  const sortCountriesByLike = (sortType: "asc" | "desc") => {
+    dispatch({ type: "sort", payload: { sortType } });
   };
-  const sortCountriesDesc = () => {
-    const sorted = [...countriesList].sort((a, b) => b.like - a.like);
-    setCountriesList(sorted);
+  const handledeleteCountry = (id: number) => {
+    dispatch({ type: "delete", payload: { id } });
   };
+  const handleRestoreCountry = (id: number) => {
+    dispatch({ type: "restore", payload: { id } });
+  };
+  const handleCountryCreate = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const country: Country = {
+      id: 0,
+      like: 0,
+      img: "https://via.placeholder.com/300",
+      name: formData.get("name") as string,
+      capitalCity: formData.get("capitalCity") as string,
+      population: Number(formData.get("population")),
+      infoLink: formData.get("infoLink") as string,
+      isDeleted: false,
+    };
+    if (
+      !country.name ||
+      !country.capitalCity ||
+      !country.population ||
+      !country.infoLink
+    ) {
+      alert("Please fill all fields");
+      return;
+    }
+    dispatch({ type: "create", payload: { country } });
+    e.currentTarget.reset();
+  };
+  const sortedByDelete = countriesList.slice().sort((a, b) => {
+    if (a.isDeleted && !b.isDeleted) return 1;
+    if (!a.isDeleted && b.isDeleted) return -1;
+    return 0;
+  });
   return (
     <section className={styles.countriesSection}>
-      <Sort
-        sortCountriesAsc={sortCountriesAsc}
-        sortCountriesDesc={sortCountriesDesc}
-      />
+      <div className={styles.additional}>
+        <Form onCountryCreate={handleCountryCreate} />
+        <Sort sortCountriesByLike={sortCountriesByLike} />
+      </div>
       <div className={styles.countries}>
-        {countriesList.map((country) => (
-          <div className={styles.countryCard} key={country.id}>
-            <Link
+        {sortedByDelete.map((country) => (
+          <div>
+            <Restore onRestore={() => handleRestoreCountry(country.id)} />
+            <div
+              className={`${styles.countryCard} ${
+                country.isDeleted ? styles.deleted : ""
+              }`}
               key={country.id}
-              to={`country/${String(country.id)}`}
-              style={{ textDecoration: "none", color: "inherit" }}
+              style={{ pointerEvents: country.isDeleted ? "none" : "auto" }}
             >
-              {children(country)}
-            </Link>
-            <Like
-              country={country}
-              upVote={() => handleCountryUpvote(country.id)}
-            />
-            <CardFooter link={country.infoLink} />
+              <Link
+                key={country.id}
+                to={`country/${String(country.id)}`}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                {children(country)}
+              </Link>
+              <div className={styles.likeDelete}>
+                <Like
+                  country={country}
+                  upVote={() => handleCountryUpvote(country.id)}
+                />
+                <Delete
+                  onDeleteCountry={() => handledeleteCountry(country.id)}
+                />
+              </div>
+              <CardFooter link={country.infoLink} />
+            </div>
           </div>
         ))}
       </div>
