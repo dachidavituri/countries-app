@@ -10,12 +10,19 @@ import { Link } from "react-router-dom";
 import { useReducer } from "react";
 import { countries } from "@/info";
 import { reducer } from "^/home/components/card/reducer";
-import { FormEvent } from "react";
-
+import { useState } from "react";
+import { validateCountry } from "./validation";
 interface CardProps {
   children: (country: Country) => React.ReactNode;
 }
 const Card: React.FC<CardProps> = ({ children }) => {
+  const [errors, setErrors] = useState({
+    name: "",
+    capitalCity: "",
+    population: "",
+    infoLink: "",
+  });
+
   const [countriesList, dispatch] = useReducer(reducer, countries);
   const handleCountryUpvote = (id: number) => {
     dispatch({ type: "upvote", payload: { id } });
@@ -29,30 +36,25 @@ const Card: React.FC<CardProps> = ({ children }) => {
   const handleRestoreCountry = (id: number) => {
     dispatch({ type: "restore", payload: { id } });
   };
-  const handleCountryCreate = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const country: Country = {
-      id: 0,
-      like: 0,
-      img: "https://via.placeholder.com/300",
-      name: formData.get("name") as string,
-      capitalCity: formData.get("capitalCity") as string,
-      population: Number(formData.get("population")),
-      infoLink: formData.get("infoLink") as string,
-      isDeleted: false,
-    };
-    if (
-      !country.name ||
-      !country.capitalCity ||
-      !country.population ||
-      !country.infoLink
-    ) {
-      alert("Please fill all fields");
-      return;
+  const handleCountryCreate = (countryFields: {
+    name: string;
+    capitalCity: string;
+    population: number;
+    infoLink: string;
+  }) => {
+    const errors = validateCountry(countryFields);
+    setErrors(errors);
+    const hasError = Object.values(errors).some((error) => error !== "");
+    if (!hasError) {
+      const country: Country = {
+        ...countryFields,
+        id: 0,
+        like: 0,
+        img: "https://via.placeholder.com/300",
+        isDeleted: false,
+      };
+      dispatch({ type: "create", payload: { country } });
     }
-    dispatch({ type: "create", payload: { country } });
-    e.currentTarget.reset();
   };
   const sortedByDelete = countriesList.slice().sort((a, b) => {
     if (a.isDeleted && !b.isDeleted) return 1;
@@ -62,12 +64,12 @@ const Card: React.FC<CardProps> = ({ children }) => {
   return (
     <section className={styles.countriesSection}>
       <div className={styles.additional}>
-        <Form onCountryCreate={handleCountryCreate} />
+        <Form onCountryCreate={handleCountryCreate} errors={errors} />
         <Sort sortCountriesByLike={sortCountriesByLike} />
       </div>
       <div className={styles.countries}>
         {sortedByDelete.map((country) => (
-          <div>
+          <div key={country.id}>
             <Restore onRestore={() => handleRestoreCountry(country.id)} />
             <div
               className={`${styles.countryCard} ${
