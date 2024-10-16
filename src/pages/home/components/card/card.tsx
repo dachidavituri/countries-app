@@ -12,6 +12,7 @@ import { countries } from "@/info";
 import { reducer } from "^/home/components/card/reducer";
 import { useState } from "react";
 import { validateCountry } from "./validation";
+import globe from '&/istockphoto-186019678-612x612.jpg'
 interface CardProps {
   children: (country: Country) => React.ReactNode;
 }
@@ -50,7 +51,7 @@ const Card: React.FC<CardProps> = ({ children }) => {
         ...countryFields,
         id: 0,
         like: 0,
-        img: "https://via.placeholder.com/300",
+        img: globe,
         isDeleted: false,
       };
       dispatch({ type: "create", payload: { country } });
