@@ -1,12 +1,13 @@
+import useLangauge from "@/useLanguage";
 import styles from "./information.module.css";
+import { about } from "@/info";
 const Information: React.FC = () => {
+  const lang = useLangauge()
   return (
     <>
-      <h2 className={styles.title}>ABOUT US</h2>
+      <h2 className={styles.title}>{about[lang].about}</h2>
       <p className={styles.desc}>
-        Welcome to Explore the world Travel Agency, where your dream adventures
-        come to life! With years of experience in the travel industry, We create
-        custom itineraries just for you..
+      {about[lang].info}
       </p>
       
     </>

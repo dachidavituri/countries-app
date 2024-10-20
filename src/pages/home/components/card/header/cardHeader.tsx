@@ -1,5 +1,9 @@
 import styles from "./cardHeader.module.css";
-const CardHeader: React.FC = () => {
-  return <div className={styles.header}>ინფორმაცია ქვეყნების შესახებ</div>;
+import { cardHeaderContent } from "@/info";
+interface CardHeaderProps {
+  lang: "ka" | "en";
+}
+const CardHeader: React.FC<CardHeaderProps> = ({ lang }) => {
+  return <div className={styles.header}>{cardHeaderContent[lang]}</div>;
 };
 export default CardHeader;

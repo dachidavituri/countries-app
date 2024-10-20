@@ -1,10 +1,12 @@
 import styles from "./form.module.css";
 import { FormEvent, ChangeEvent } from "react";
 import { useState } from "react";
+import { createFormPlaceholder } from "@/info";
+import useLangauge from "@/useLanguage";
 interface FormProps {
   onCountryCreate: (countryFields: {
-    name: string;
-    capitalCity: string;
+    name: { ka: string };
+    capitalCity: { ka: string };
     population: number;
     infoLink: string;
   }) => void;
@@ -16,15 +18,28 @@ interface FormProps {
   };
 }
 const Form: React.FC<FormProps> = ({ onCountryCreate, errors }) => {
+  const lang = useLangauge();
   const [createForm, setCreateForm] = useState({
-    name: "",
-    capitalCity: "",
+    name: { ka: "" },
+    capitalCity: { ka: "" },
     population: 0,
     infoLink: "",
   });
   const handleChangeState = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setCreateForm((prevForm) => ({ ...prevForm, [name]: value }));
+    if (name === "name") {
+      setCreateForm((prevForm) => ({
+        ...prevForm,
+        name: { ...prevForm.name, ka: value },
+      }));
+    } else if (name === "capitalCity") {
+      setCreateForm((prevForm) => ({
+        ...prevForm,
+        capitalCity: { ...prevForm.capitalCity, ka: value },
+      }));
+    } else {
+      setCreateForm((prevForm) => ({ ...prevForm, [name]: value }));
+    }
   };
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,26 +50,26 @@ const Form: React.FC<FormProps> = ({ onCountryCreate, errors }) => {
     <form onSubmit={handleSubmit} className={styles.formContainer}>
       <input
         className={styles.inputField}
-        placeholder="Country Name"
+        placeholder={createFormPlaceholder[lang].name}
         name="name"
         type="text"
-        value={createForm.name}
+        value={createForm.name.ka}
         onChange={handleChangeState}
       />
       <p className={styles.error}>{errors.name}</p>
       <input
         className={styles.inputField}
-        placeholder="Capital City"
+        placeholder={createFormPlaceholder[lang].city}
         name="capitalCity"
         type="text"
-        value={createForm.capitalCity}
+        value={createForm.capitalCity.ka}
         onChange={handleChangeState}
       />
       <p className={styles.error}>{errors.capitalCity}</p>
 
       <input
         className={styles.inputField}
-        placeholder="Population"
+        placeholder={createFormPlaceholder[lang].population}
         name="population"
         type="number"
         value={createForm.population}
@@ -64,7 +79,7 @@ const Form: React.FC<FormProps> = ({ onCountryCreate, errors }) => {
 
       <input
         className={styles.inputField}
-        placeholder="Info link"
+        placeholder={createFormPlaceholder[lang].Infolink}
         name="infoLink"
         type="text"
         value={createForm.infoLink}
@@ -75,7 +90,7 @@ const Form: React.FC<FormProps> = ({ onCountryCreate, errors }) => {
       <input
         className={styles.submitButton}
         type="submit"
-        value="Create Country"
+        value={createFormPlaceholder[lang].btnVal}
       />
     </form>
   );

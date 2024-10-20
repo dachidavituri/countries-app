@@ -1,22 +1,19 @@
+import useLangauge from "@/useLanguage";
 import styles from "./review.module.css";
+import { review } from "@/info";
 const Review: React.FC = () => {
+  const lang = useLangauge()
   return (
     <>
       <section className={styles.testimonials}>
-        <h3 className={styles.smallTitle}>What Our Clients Say</h3>
-        <blockquote>
-          "Explore THE WORLD Travel Agency made our family vacation amazing!
-          Everything was planned perfectly."
-        </blockquote>
-        <blockquote>
-          "They listened to our needs and created the perfect trip for us.
-          Highly recommend!"
-        </blockquote>
+        <h3 className={styles.smallTitle}>{review[lang].title}</h3>
+        {review[lang].testimonials.map((tesimonial) => (
+          <blockquote>{tesimonial}</blockquote>
+        ))}
       </section>
-
       <footer className={styles.footer}>
         <p className={styles.desc}>
-          Join us in exploring the world, one adventure at a time!
+        {review[lang].footer}
         </p>
       </footer>
     </>

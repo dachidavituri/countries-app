@@ -2,7 +2,11 @@ import React, { ChangeEvent } from "react";
 import styles from "./contactForm.module.css";
 import { useState } from "react";
 import { validateContact } from "^/contact/validation";
+import { labelsLang } from "@/info";
+import useLangauge from "@/useLanguage";
 const ContactForm: React.FC = () => {
+  const lang = useLangauge()
+  const currentLabels = labelsLang[lang]
   const [form, setForm] = useState({
     name: "",
     surname: "",
@@ -30,13 +34,13 @@ const ContactForm: React.FC = () => {
     if (!hasError) {
       console.log(form);
     } else {
-      console.log("შენ გაქვს შეცდომა შეავსე სწორად");
+      console.log(currentLabels.errorMsg);
     }
   };
   return (
     <form className={styles.formContainer} onSubmit={handleSubmitForm}>
       <div className={styles.formGroup}>
-        <label htmlFor="name">სახელი:</label>
+        <label htmlFor="name">{currentLabels.name}</label>
         <input
           type="text"
           id="name"
@@ -48,7 +52,7 @@ const ContactForm: React.FC = () => {
       </div>
 
       <div className={styles.formGroup}>
-        <label htmlFor="surname">გვარი:</label>
+        <label htmlFor="surname">{currentLabels.surname}</label>
         <input
           type="text"
           id="surname"
@@ -59,7 +63,7 @@ const ContactForm: React.FC = () => {
         {errors.surname && <p className={styles.error}>{errors.surname}</p>}
       </div>
       <div className={styles.formGroup}>
-        <label htmlFor="email">Email:</label>
+        <label htmlFor="email">{currentLabels.email}</label>
 
         <input
           type="text"
@@ -71,7 +75,7 @@ const ContactForm: React.FC = () => {
         {errors.email && <p className={styles.error}>{errors.email}</p>}
       </div>
       <div className={styles.formGroup}>
-        <label htmlFor="message">შეტყობინება:</label>
+        <label htmlFor="message">{currentLabels.message}</label>
         <textarea
           id="message"
           name="message"
@@ -80,7 +84,7 @@ const ContactForm: React.FC = () => {
         />
         {errors.message && <p className={styles.error}>{errors.message}</p>}
       </div>
-      <button type="submit">გაგზავნა</button>
+      <button type="submit">{currentLabels.submit}</button>
     </form>
   );
 };

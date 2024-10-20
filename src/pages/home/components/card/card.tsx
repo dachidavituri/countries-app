@@ -12,18 +12,18 @@ import { countries } from "@/info";
 import { reducer } from "^/home/components/card/reducer";
 import { useState } from "react";
 import { validateCountry } from "./validation";
-import globe from '&/istockphoto-186019678-612x612.jpg'
+import globe from "&/istockphoto-186019678-612x612.jpg";
 interface CardProps {
   children: (country: Country) => React.ReactNode;
+  lang: "ka" | "en";
 }
-const Card: React.FC<CardProps> = ({ children }) => {
+const Card: React.FC<CardProps> = ({ children, lang }) => {
   const [errors, setErrors] = useState({
     name: "",
     capitalCity: "",
     population: "",
     infoLink: "",
   });
-
   const [countriesList, dispatch] = useReducer(reducer, countries);
   const handleCountryUpvote = (id: number) => {
     dispatch({ type: "upvote", payload: { id } });
@@ -38,8 +38,8 @@ const Card: React.FC<CardProps> = ({ children }) => {
     dispatch({ type: "restore", payload: { id } });
   };
   const handleCountryCreate = (countryFields: {
-    name: string;
-    capitalCity: string;
+    name: { ka: string };
+    capitalCity: { ka: string };
     population: number;
     infoLink: string;
   }) => {
@@ -53,6 +53,14 @@ const Card: React.FC<CardProps> = ({ children }) => {
         like: 0,
         img: globe,
         isDeleted: false,
+        name: {
+          ka: countryFields.name.ka,
+          en: countryFields.name.ka,
+        },
+        capitalCity: {
+          ka: countryFields.capitalCity.ka,
+          en: countryFields.capitalCity.ka,
+        },
       };
       dispatch({ type: "create", payload: { country } });
     }
@@ -81,7 +89,7 @@ const Card: React.FC<CardProps> = ({ children }) => {
             >
               <Link
                 key={country.id}
-                to={`country/${String(country.id)}`}
+                to={`/${lang}/country/${String(country.id)}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 {children(country)}

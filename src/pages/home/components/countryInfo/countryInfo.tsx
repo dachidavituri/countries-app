@@ -1,9 +1,13 @@
 import styles from "./countryInfo.module.css";
 import { detailedInfo } from "@/info";
+import { detailedTitle } from "@/info";
+import useLangauge from "@/useLanguage";
 import { useParams } from "react-router-dom";
 
 const CountryInfo: React.FC = () => {
   const { id } = useParams();
+  const lang = useLangauge();
+
   const countryInfo = detailedInfo.find((country) => country.id === id);
   console.log(countryInfo);
   if (!countryInfo) {
@@ -14,35 +18,36 @@ const CountryInfo: React.FC = () => {
 
   return (
     <div className={styles.countryInfo}>
-      <h1 className={styles.countryName}>{countryInfo.officialName}</h1>
-      <h2 className={styles.countryCapital}>{countryInfo.capital}</h2>
+      <h1 className={styles.countryName}>{countryInfo.officialName[lang]}</h1>
+      <h2 className={styles.countryCapital}>{countryInfo.capital[lang]}</h2>
       <ul className={styles.countryDetails}>
         <li>
-          <strong>Flag:</strong> <img src={countryInfo.img} />
+          <strong>{detailedTitle[lang].flag}:</strong> <img src={countryInfo.img} />
         </li>
         <li>
-          <strong>Population:</strong> {countryInfo.population.toLocaleString()}
+          <strong>{detailedTitle[lang].population}:</strong> {countryInfo.population.toLocaleString()}
         </li>
         <li>
-          <strong>Area:</strong> {countryInfo.area.toLocaleString()} km²
+          <strong>{detailedTitle[lang].area}:</strong> {countryInfo.area.toLocaleString()} km²
         </li>
         <li>
-          <strong>Region:</strong> {countryInfo.region}
+          <strong>{detailedTitle[lang].region}:</strong> {countryInfo.region[lang]}
         </li>
         <li>
-          <strong>Official Language:</strong> {countryInfo.officialLanguage}
+          <strong>{detailedTitle[lang].officialLanguage}:</strong>{" "}
+          {countryInfo.officialLanguage[lang]}
         </li>
         <li>
-          <strong>Currency:</strong> {countryInfo.currency}
+          <strong>{detailedTitle[lang].currency}:</strong> {countryInfo.currency[lang]}
         </li>
         <li>
-          <strong>Major Cities:</strong> {countryInfo.majorCities}
+          <strong>{detailedTitle[lang].majorCities}:</strong> {countryInfo.majorCities[lang]}
         </li>
         <li>
-          <strong>Cuisine:</strong> {countryInfo.cuisineDescription}
+          <strong>{detailedTitle[lang].cuisine}:</strong> {countryInfo.cuisineDescription[lang]}
         </li>
         <li>
-          <strong>Independence Day:</strong> {countryInfo.independenceDay}
+          <strong>{detailedTitle[lang].independenceDay}:</strong> {countryInfo.independenceDay[lang]}
         </li>
       </ul>
     </div>
