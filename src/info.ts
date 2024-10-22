@@ -2,10 +2,9 @@ import georgiaFlag from "&/georgia-flag.jpg";
 import germanyFlag from "&/istockphoto-962789576-612x612.jpg";
 import franceFlag from "&/360_F_41940248_NCRNah6ISoHgXXmBEe4heQ0UPXXd1onE.jpg";
 
-
-interface basicContent{
-  ka: string,
-  en: string
+interface basicContent {
+  ka: string;
+  en: string;
 }
 interface Categories {
   name: string;
@@ -481,3 +480,11 @@ export const createFormPlaceholder = {
     btnVal: "Create Country",
   },
 };
+interface changeLabels {
+  lang: "ka" | "en";
+  language: { ka: string; en: string };
+}
+export const changeLanugeageTab: changeLabels[] = [
+  { lang: "ka", language: { ka: "ქართული", en: "Georgia" } },
+  { lang: "en", language: { ka: "ინგლისური", en: "English" } },
+];

@@ -12,17 +12,18 @@ import { countries } from "@/info";
 import { reducer } from "^/home/components/card/reducer";
 import { useState } from "react";
 import { validateCountry } from "./validation";
-import globe from "&/istockphoto-186019678-612x612.jpg";
+
 interface CardProps {
   children: (country: Country) => React.ReactNode;
   lang: "ka" | "en";
 }
 const Card: React.FC<CardProps> = ({ children, lang }) => {
   const [errors, setErrors] = useState({
-    name: "",
-    capitalCity: "",
-    population: "",
-    infoLink: "",
+    name: { ka: "", en: "" },
+    capitalCity: { ka: "", en: "" },
+    population: { ka: "", en: "" },
+    infoLink: { ka: "", en: "" },
+    img: { ka: "", en: "" }
   });
   const [countriesList, dispatch] = useReducer(reducer, countries);
   const handleCountryUpvote = (id: number) => {
@@ -38,29 +39,23 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
     dispatch({ type: "restore", payload: { id } });
   };
   const handleCountryCreate = (countryFields: {
-    name: { ka: string };
-    capitalCity: { ka: string };
+    name: { ka: string; en: string };
+    capitalCity: { ka: string; en: string };
     population: number;
     infoLink: string;
+    img: string;
   }) => {
     const errors = validateCountry(countryFields);
     setErrors(errors);
-    const hasError = Object.values(errors).some((error) => error !== "");
+    const hasError = Object.values(errors).some(
+      (error) => error.ka !== "" || error.en !== ""
+    );
     if (!hasError) {
       const country: Country = {
         ...countryFields,
         id: 0,
         like: 0,
-        img: globe,
         isDeleted: false,
-        name: {
-          ka: countryFields.name.ka,
-          en: countryFields.name.ka,
-        },
-        capitalCity: {
-          ka: countryFields.capitalCity.ka,
-          en: countryFields.capitalCity.ka,
-        },
       };
       dispatch({ type: "create", payload: { country } });
     }

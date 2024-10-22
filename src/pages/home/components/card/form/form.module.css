@@ -38,3 +38,12 @@
   color: rgb(242, 80, 80);
   font-size: 10px;
 }
+.inputLanguage{
+  display: flex;
+  cursor: pointer;
+  gap: 10px;
+  font-weight: bold;
+}
+.activeInput{
+  text-decoration: underline;
+}
