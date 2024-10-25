@@ -18,6 +18,17 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/:lang" element={<Layout />}>
             <Route
+
+
+
+
+
+
+
+
+
+
+
               path="home"
               element={
                 <Suspense fallback={<Loading />}>
@@ -25,6 +36,12 @@ const App: React.FC = () => {
                 </Suspense>
               }
             />
+
+
+
+
+
+            
             <Route path="country/:id" element={<CountryInfoView />}></Route>
             <Route path="about" element={<AboutPageView />}></Route>
             <Route path="services" element={<ServicePageView />}></Route>
