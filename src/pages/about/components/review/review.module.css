@@ -19,11 +19,10 @@
   color: #e0b311;
 }
 
- 
 blockquote {
-    font-style: italic;
-    padding: 10px;
-    margin: 10px 0;
-    border-left: 4px solid #f2b705;
-    background: #e4efdb;
-  }
+  font-style: italic;
+  padding: 10px;
+  margin: 10px 0;
+  border-left: 4px solid #f2b705;
+  background: #e4efdb;
+}

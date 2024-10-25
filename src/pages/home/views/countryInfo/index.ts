@@ -1,1 +1,1 @@
-export {default} from './countryInfoIndex'
+export { default } from "./countryInfoIndex";

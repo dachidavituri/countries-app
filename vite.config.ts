@@ -6,8 +6,8 @@ export default defineConfig(() => {
   const rootPath = path.resolve(process.cwd());
   const srcPath = `${rootPath}/src`;
   const componentsPath = `${srcPath}/components`;
-  const assetsPath = `${srcPath}/assets`
-  const pagesPath = `${srcPath}/pages`
+  const assetsPath = `${srcPath}/assets`;
+  const pagesPath = `${srcPath}/pages`;
 
   return {
     plugins: [react()],
@@ -15,9 +15,9 @@ export default defineConfig(() => {
       alias: {
         "~": rootPath,
         "@": srcPath,
-        "$": componentsPath,
-        '&': assetsPath,
-        '^': pagesPath
+        $: componentsPath,
+        "&": assetsPath,
+        "^": pagesPath,
       },
     },
   };

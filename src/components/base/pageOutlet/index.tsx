@@ -1,1 +1,1 @@
-export {default} from './pageOutlet'
+export { default } from "./pageOutlet";

@@ -6,7 +6,11 @@ const Destinations: React.FC = () => {
 
   return (
     <section className={styles.destinations}>
-      <h3 className={styles.smallTitle}>{lang == 'ka' ? 'აღმოაჩინეთ ღირშესანიშნავი ადგილები': 'Explore Destinations'}</h3>
+      <h3 className={styles.smallTitle}>
+        {lang == "ka"
+          ? "აღმოაჩინეთ ღირშესანიშნავი ადგილები"
+          : "Explore Destinations"}
+      </h3>
       <div className={styles.destinationList}>
         {destination.map((desc, index) => (
           <div key={index} className={styles.destination}>

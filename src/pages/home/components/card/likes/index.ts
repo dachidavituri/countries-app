@@ -1,1 +1,1 @@
-export {default} from './like'
+export { default } from "./like";

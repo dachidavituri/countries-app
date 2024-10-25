@@ -1,1 +1,1 @@
-export {default} from './cardFooter'
+export { default } from "./cardFooter";

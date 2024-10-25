@@ -5,8 +5,8 @@ interface serviceListProps {
   service: Service;
 }
 const ServiceList: React.FC<serviceListProps> = ({ service }) => {
-  const lang = useLangauge()
-  
+  const lang = useLangauge();
+
   return (
     <li className={styles.serviceItem}>
       <h4>{service.title[lang]}</h4>

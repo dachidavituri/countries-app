@@ -1,1 +1,1 @@
-export {default} from './homeIndex'
+export { default } from "./homeIndex";

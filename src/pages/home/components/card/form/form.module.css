@@ -34,16 +34,16 @@
 .submitButton:hover {
   background-color: rgb(222, 165, 80);
 }
-.error{
+.error {
   color: rgb(242, 80, 80);
   font-size: 10px;
 }
-.inputLanguage{
+.inputLanguage {
   display: flex;
   cursor: pointer;
   gap: 10px;
   font-weight: bold;
 }
-.activeInput{
+.activeInput {
   text-decoration: underline;
 }

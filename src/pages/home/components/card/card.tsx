@@ -23,7 +23,7 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
     capitalCity: { ka: "", en: "" },
     population: { ka: "", en: "" },
     infoLink: { ka: "", en: "" },
-    img: { ka: "", en: "" }
+    img: { ka: "", en: "" },
   });
   const [countriesList, dispatch] = useReducer(reducer, countries);
   const handleCountryUpvote = (id: number) => {
@@ -48,7 +48,7 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
     const errors = validateCountry(countryFields);
     setErrors(errors);
     const hasError = Object.values(errors).some(
-      (error) => error.ka !== "" || error.en !== ""
+      (error) => error.ka !== "" || error.en !== "",
     );
     if (!hasError) {
       const country: Country = {

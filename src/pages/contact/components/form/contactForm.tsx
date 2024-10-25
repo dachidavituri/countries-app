@@ -5,8 +5,8 @@ import { validateContact } from "^/contact/validation";
 import { labelsLang } from "@/info";
 import useLangauge from "@/useLanguage";
 const ContactForm: React.FC = () => {
-  const lang = useLangauge()
-  const currentLabels = labelsLang[lang]
+  const lang = useLangauge();
+  const currentLabels = labelsLang[lang];
   const [form, setForm] = useState({
     name: "",
     surname: "",
@@ -20,7 +20,7 @@ const ContactForm: React.FC = () => {
     message: "",
   });
   const handleChangeState = (
-    e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
   ) => {
     const { value, name } = e.target;
     setForm((prevForm) => ({ ...prevForm, [name]: value }));

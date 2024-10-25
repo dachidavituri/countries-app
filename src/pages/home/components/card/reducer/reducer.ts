@@ -12,7 +12,7 @@ export const reducer = (state: Country[], action: CountriesReducerAction) => {
       return state.map((country) =>
         country.id === action.payload.id
           ? { ...country, like: country.like + 1 }
-          : country
+          : country,
       );
     case "sort":
       return [...state].sort((a, b) => {
@@ -33,13 +33,13 @@ export const reducer = (state: Country[], action: CountriesReducerAction) => {
       return state.map((country) =>
         country.id == action.payload.id
           ? { ...country, isDeleted: true }
-          : country
+          : country,
       );
     case "restore":
       return state.map((country) =>
         country.id == action.payload.id
           ? { ...country, isDeleted: false }
-          : country
+          : country,
       );
     default:
       return state;

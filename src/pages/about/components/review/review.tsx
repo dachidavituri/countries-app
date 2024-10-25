@@ -2,7 +2,7 @@ import useLangauge from "@/useLanguage";
 import styles from "./review.module.css";
 import { review } from "@/info";
 const Review: React.FC = () => {
-  const lang = useLangauge()
+  const lang = useLangauge();
   return (
     <>
       <section className={styles.testimonials}>
@@ -12,9 +12,7 @@ const Review: React.FC = () => {
         ))}
       </section>
       <footer className={styles.footer}>
-        <p className={styles.desc}>
-        {review[lang].footer}
-        </p>
+        <p className={styles.desc}>{review[lang].footer}</p>
       </footer>
     </>
   );

@@ -10,11 +10,7 @@ const Like: React.FC<LikeProps> = ({ country, upVote }) => {
   return (
     <div className={styles.likeSection}>
       <span>{country.like}</span>
-      <img
-        src={likeImg}
-        className={styles.like}
-        onClick={upVote}
-      />
+      <img src={likeImg} className={styles.like} onClick={upVote} />
     </div>
   );
 };

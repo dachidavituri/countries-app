@@ -6,7 +6,6 @@ import useLangauge from "@/useLanguage";
 import { changeLanugeageTab } from "@/info";
 import { validateCountry } from "../validation";
 
-
 interface FormProps {
   onCountryCreate: (countryFields: {
     name: { ka: string; en: string };
@@ -20,7 +19,7 @@ interface FormProps {
     capitalCity: { ka: string; en: string };
     population: { ka: string; en: string };
     infoLink: { ka: string; en: string };
-    img: { ka: string; en: string },
+    img: { ka: string; en: string };
   };
 }
 const Form: React.FC<FormProps> = ({ onCountryCreate, errors }) => {
@@ -58,27 +57,26 @@ const Form: React.FC<FormProps> = ({ onCountryCreate, errors }) => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { name, capitalCity, population, infoLink, img } = createForm;
-    const errors = validateCountry(createForm)
-    const hasGeoError = Object.values(errors).some(error => error.ka)
-    const hasEngError = Object.values(errors).some(error => error.en)
-    if(hasGeoError && !hasEngError){
-      setActiveLang('ka')
+    const errors = validateCountry(createForm);
+    const hasGeoError = Object.values(errors).some((error) => error.ka);
+    const hasEngError = Object.values(errors).some((error) => error.en);
+    if (hasGeoError && !hasEngError) {
+      setActiveLang("ka");
     }
-    if(hasEngError && !hasGeoError){
-      setActiveLang('en')
+    if (hasEngError && !hasGeoError) {
+      setActiveLang("en");
     }
     onCountryCreate({ name, capitalCity, population, infoLink, img });
-
   };
   const handleInputLanguage = (lang: "ka" | "en") => {
     setActiveLang(lang);
-   
   };
   return (
     <>
       <div className={styles.inputLanguage}>
         {changeLanugeageTab.map((element, i) => (
-          <div key={i}
+          <div
+            key={i}
             onClick={() => handleInputLanguage(element.lang)}
             className={activeLang == element.lang ? styles.activeInput : ""}
           >
