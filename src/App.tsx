@@ -12,7 +12,6 @@ import CountryInfoView from "^/home/views/countryInfo";
 import NotFoundVIew from "^/notFound/views/notFoundView";
 
 const App: React.FC = () => {
-  const a = 2
   return (
     <div className="App">
       <BrowserRouter>
