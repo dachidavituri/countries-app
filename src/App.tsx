@@ -10,6 +10,7 @@ import ContactFormView from "^/contact/views/contactView";
 import { Suspense } from "react";
 import CountryInfoView from "^/home/views/countryInfo";
 import NotFoundVIew from "^/notFound/views/notFoundView";
+import OtpView from "^/otp/views/otp";
 
 const App: React.FC = () => {
   return (
@@ -30,6 +31,7 @@ const App: React.FC = () => {
             <Route path="about" element={<AboutPageView />}></Route>
             <Route path="services" element={<ServicePageView />}></Route>
             <Route path="contact" element={<ContactFormView />}></Route>
+            <Route path="otp" element={<OtpView />}></Route>
           </Route>
           <Route path="/" element={<Navigate to="/ka/home" />} />
           <Route path="*" element={<NotFoundVIew />}></Route>

@@ -91,6 +91,7 @@ export const categories: Categories[] = [
   { name: "about", path: "about" },
   { name: "services", path: "services" },
   { name: "contact", path: "contact" },
+  { name: "otp", path: "otp" },
 ];
 export interface Country {
   id: number;
@@ -484,7 +485,17 @@ interface changeLabels {
   lang: "ka" | "en";
   language: { ka: string; en: string };
 }
+export interface OtpProps {
+  length: number;
+}
 export const changeLanugeageTab: changeLabels[] = [
   { lang: "ka", language: { ka: "ქართული", en: "Georgia" } },
   { lang: "en", language: { ka: "ინგლისური", en: "English" } },
 ];
+export const otpInputLabels = {
+  ka: {
+    password: "შეიყვანე ერთჯერადი პაროლი",
+    code: "შენს მიერ შეყვანილი კოდია:",
+  },
+  en: { password: "Enter One Time Password", code: "The code you entered is:" },
+};
