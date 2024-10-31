@@ -52,6 +52,30 @@ const Otp: React.FC<OtpProps> = ({ length }) => {
       }
     }
   };
+  const handlePaste = (
+    e: React.ClipboardEvent<HTMLInputElement>,
+    index: number,
+  ) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text");
+    const numbers = pastedData.split("").filter((char) => /^\d$/.test(char));
+    const newInputs = [...inputs];
+    numbers.forEach((num, i) => {
+      if (index + i < length) {
+        newInputs[index + i].value = num;
+      }
+    });
+    if (numbers.length + index > length) {
+      return;
+    }
+    setInputs(newInputs);
+    setJoinedPassword(newInputs.map((obj) => obj.value).join(""));
+    const nextInputIndex = index + numbers.length;
+    if (nextInputIndex < length) {
+      inputRefs.current[nextInputIndex]?.focus();
+    }
+  };
+
   return (
     <div className={styles.otpSection}>
       <h1>{otpInputLabels[lang].password}</h1>
@@ -66,6 +90,7 @@ const Otp: React.FC<OtpProps> = ({ length }) => {
             value={input.value}
             maxLength={1}
             autoFocus={i === 0}
+            onPaste={(e) => handlePaste(e, i)}
           />
         ))}
       </div>
