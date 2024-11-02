@@ -1,10 +1,18 @@
 import styles from "./form.module.css";
-import { FormEvent, ChangeEvent } from "react";
+import {
+  FormEvent,
+  ChangeEvent,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { useState } from "react";
 import { createFormPlaceholder } from "@/info";
 import useLangauge from "@/useLanguage";
 import { changeLanugeageTab } from "@/info";
 import { validateCountry } from "../validation";
+import { Country } from "@/info";
+import { CountryUpdates } from "@/info";
 
 interface FormProps {
   onCountryCreate: (countryFields: {
@@ -21,8 +29,19 @@ interface FormProps {
     infoLink: { ka: string; en: string };
     img: { ka: string; en: string };
   };
+  onEditId: string;
+  countriesList: Country[];
+  onCountryUpdate: (id: string, updates: CountryUpdates) => void;
+  setEditId: Dispatch<SetStateAction<string>>;
 }
-const Form: React.FC<FormProps> = ({ onCountryCreate, errors }) => {
+const Form: React.FC<FormProps> = ({
+  onCountryCreate,
+  errors,
+  onEditId,
+  countriesList,
+  onCountryUpdate,
+  setEditId,
+}) => {
   const [activeLang, setActiveLang] = useState<"ka" | "en">("ka");
   const lang = useLangauge();
   const [createForm, setCreateForm] = useState({
@@ -32,6 +51,28 @@ const Form: React.FC<FormProps> = ({ onCountryCreate, errors }) => {
     infoLink: "",
     img: "",
   });
+  useEffect(() => {
+    const findCountryToEdit = (id: string) => {
+      if (id) {
+        const countryToEdit = countriesList.find(
+          (country) => country.id === id,
+        );
+        if (countryToEdit) {
+          setCreateForm({
+            name: countryToEdit.name,
+            capitalCity: countryToEdit.capitalCity,
+            population: countryToEdit.population,
+            infoLink: countryToEdit.infoLink,
+            img: countryToEdit.img,
+          });
+        }
+      }
+    };
+    if (onEditId) {
+      findCountryToEdit(onEditId);
+    }
+  }, [onEditId, countriesList]);
+
   const handleChangeState = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -54,6 +95,15 @@ const Form: React.FC<FormProps> = ({ onCountryCreate, errors }) => {
       reader.readAsDataURL(file);
     }
   };
+  const resetForm = () => {
+    setCreateForm({
+      name: { ka: "", en: "" },
+      capitalCity: { ka: "", en: "" },
+      population: 0,
+      infoLink: "",
+      img: "",
+    });
+  };
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { name, capitalCity, population, infoLink, img } = createForm;
@@ -63,10 +113,42 @@ const Form: React.FC<FormProps> = ({ onCountryCreate, errors }) => {
     if (hasGeoError && !hasEngError) {
       setActiveLang("ka");
     }
-    if (hasEngError && !hasGeoError) {
-      setActiveLang("en");
+    if (hasEngError && !hasGeoError) setActiveLang("en");
+    if (!hasGeoError && !hasEngError) resetForm();
+    const countryToEdit = countriesList.find(
+      (country) => country.id == onEditId,
+    );
+    const updates: CountryUpdates = {
+      name,
+      capitalCity,
+      population,
+      infoLink,
+      img,
+      like: countryToEdit?.like,
+      detaildInfo: countryToEdit?.detaildInfo,
+    };
+
+    if (onEditId) {
+      onCountryUpdate(onEditId, updates);
+      const errorsOnUpdate = validateCountry(updates);
+      const hasGeoErrorOnUpdate = Object.values(errorsOnUpdate).some(
+        (error) => error.ka,
+      );
+      const hasEngErrorOnUpdate = Object.values(errorsOnUpdate).some(
+        (error) => error.en,
+      );
+      if (hasGeoErrorOnUpdate && !hasEngErrorOnUpdate) setActiveLang("ka");
+
+      if (hasEngErrorOnUpdate && !hasGeoErrorOnUpdate) setActiveLang("en");
+
+      if (!hasGeoErrorOnUpdate && !hasEngErrorOnUpdate) {
+        setEditId("");
+        resetForm();
+      }
     }
-    onCountryCreate({ name, capitalCity, population, infoLink, img });
+    if (!onEditId) {
+      onCountryCreate({ name, capitalCity, population, infoLink, img });
+    }
   };
   const handleInputLanguage = (lang: "ka" | "en") => {
     setActiveLang(lang);
@@ -131,7 +213,11 @@ const Form: React.FC<FormProps> = ({ onCountryCreate, errors }) => {
         <input
           className={styles.submitButton}
           type="submit"
-          value={createFormPlaceholder[lang].btnVal}
+          value={
+            onEditId
+              ? createFormPlaceholder[lang].updateVal
+              : createFormPlaceholder[lang].btnVal
+          }
         />
       </form>
     </>

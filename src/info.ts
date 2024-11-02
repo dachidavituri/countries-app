@@ -1,7 +1,3 @@
-import georgiaFlag from "&/georgia-flag.jpg";
-import germanyFlag from "&/istockphoto-962789576-612x612.jpg";
-import franceFlag from "&/360_F_41940248_NCRNah6ISoHgXXmBEe4heQ0UPXXd1onE.jpg";
-
 interface basicContent {
   ka: string;
   en: string;
@@ -14,20 +10,7 @@ export interface LocalizedString {
   ka: string;
   en: string;
 }
-export interface DetailedInfo {
-  id: string;
-  officialName: LocalizedString;
-  capital: LocalizedString;
-  population: number;
-  area: number;
-  region: LocalizedString;
-  officialLanguage: LocalizedString;
-  currency: LocalizedString;
-  majorCities: LocalizedString;
-  cuisineDescription: LocalizedString;
-  independenceDay: LocalizedString;
-  img: string;
-}
+
 interface Language {
   path: string;
   lang: string;
@@ -93,16 +76,15 @@ export const categories: Categories[] = [
   { name: "contact", path: "contact" },
   { name: "otp", path: "otp" },
 ];
-export interface Country {
-  id: number;
-  infoLink: string;
-  img: string;
-  name: { ka: string; en: string };
-  capitalCity: { ka: string; en: string };
-  population: number;
-  like: number;
-  isDeleted: boolean;
-}
+// export interface Country {
+//   id: number;
+//   infoLink: string;
+//   name: { ka: string; en: string };
+//   capitalCity: { ka: string; en: string };
+//   population: number;
+//   like: number;
+//   isDeleted: boolean;
+// }
 export interface Service {
   title: {
     ka: string;
@@ -117,122 +99,119 @@ export interface Destination {
   continent: { ka: string; en: string };
   description: { ka: string; en: string };
 }
-export const detailedInfo: DetailedInfo[] = [
-  {
-    id: "1",
-    officialName: {
-      ka: "საქართველო",
-      en: "Georgia",
-    },
-    capital: {
-      ka: "თბილისი",
-      en: "Tbilisi",
-    },
-    population: 3688647,
-    area: 69700,
-    region: {
-      ka: "ევრაზია",
-      en: "Eurasia",
-    },
-    officialLanguage: {
-      ka: "ქართული",
-      en: "Georgian",
-    },
-    currency: {
-      ka: "საქართველოს ლარი (GEL)",
-      en: "Georgian Lari (GEL)",
-    },
-    majorCities: {
-      ka: "თბილისი, ბათუმი, ქუთაისი, რუსთავი, ზუგდიდი",
-      en: "Tbilisi, Batumi, Kutaisi, Rustavi, Zugdidi",
-    },
-    cuisineDescription: {
-      ka: "ქართული სამზარეულო ცნობილია მდიდარი გემოების და უნიკალური კერძების გამო, რომელშიც შემავალია ბევრი ახალი გული და სანელებელი. მნიშნვნელოვანი კერძებია ხაჭაპური (ჩიზით სავსე პური), ხინკალი (პური) და პხალი (ბოსტნეულის პასტა). ქვეყანა ასევე ცნობილი არის თავისი ღვინით, რომლის წარმოების ტრადიცია რამდენიმე ათასწლეულის განმავლობაში გრძელდება, განსაკუთრებით კახეთის რეგიონში.",
-      en: "Georgian cuisine is known for its rich flavors and unique dishes, featuring a variety of fresh herbs and spices. Notable foods include khachapuri (cheese-filled bread), khinkali (dumplings), and pkhali (vegetable spreads). The country is also famous for its wine, with a winemaking tradition that dates back thousands of years, particularly in the Kakheti region.",
-    },
-    independenceDay: {
-      ka: "26 მაისი (დამოუკიდებლობის დღე)",
-      en: "May 26 (Independence Day)",
-    },
-    img: georgiaFlag,
-  },
-  {
-    id: "2",
-    officialName: {
-      ka: "გერმანიის ფედერალური რესპუბლიკა",
-      en: "Federal Republic of Germany",
-    },
-    capital: {
-      ka: "ბერლინი",
-      en: "Berlin",
-    },
-    population: 82719540,
-    area: 357022,
-    region: {
-      ka: "ევროპა",
-      en: "Europe",
-    },
-    officialLanguage: {
-      ka: "გერმანული",
-      en: "German",
-    },
-    currency: {
-      ka: "ევრო (€)",
-      en: "Euro (€)",
-    },
-    majorCities: {
-      ka: "ბერლინი, მიუნხენი, ფრანკფურტი, ჰამბურგი, კოლონი",
-      en: "Berlin, Munich, Frankfurt, Hamburg, Cologne",
-    },
-    cuisineDescription: {
-      ka: "გერმანული სამზარეულო მრავალფეროვანია და გულუხვია, ცნობილი თავისი ვარიაციის საკვების, პურისა და რეგიონალური კერძების გამო. პოპულარული კერძებია ბრატვურლე, კეპლახი, პრეტცელი და შნიცელი, რომელიც განსხვავებული რეგიონალური ლუდების რაოდენობით სრულდება. თითოეულ რეგიონს აქვს საკუთარი სპეციალობები, ადგილობრივი ტრადიციებისა და ინგრედიენტების საებე.",
-      en: "German cuisine is diverse and hearty, known for its variety of sausages, bread, and regional dishes. Popular foods include bratwurst, sauerkraut, pretzels, and schnitzel, complemented by a wide range of regional beers. Each area has its own specialties, reflecting local traditions and ingredients.",
-    },
-    independenceDay: {
-      ka: "3 ოქტომბერი (გერმანიის ერთობის დღე)",
-      en: "October 3 (German Unity Day)",
-    },
-    img: germanyFlag,
-  },
-  {
-    id: "3",
-    officialName: {
-      ka: "ფრანგული რესპუბლიკა",
-      en: "French Republic",
-    },
-    capital: {
-      ka: "პარიზი",
-      en: "Paris",
-    },
-    population: 68373433,
-    area: 551695,
-    region: {
-      ka: "ევროპა",
-      en: "Europe",
-    },
-    officialLanguage: {
-      ka: "ფრანგული",
-      en: "French",
-    },
-    currency: {
-      ka: "ევრო (€)",
-      en: "Euro (€)",
-    },
-    majorCities: {
-      ka: "პარიზი, მარსელი, ლიონი, ტულუზა, ნიცა",
-      en: "Paris, Marseille, Lyon, Toulouse, Nice",
-    },
-    cuisineDescription: {
-      ka: "ფრანგული სამზარეულო ცნობილია თავისი მრავალფეროვნებითა და ხარისხით, მდიდარი სოუსებისა და გურმანი საკვების ფართო სპექტრით, ახალი ზღვის პროდუქტებისა და გემრიელი ღვინის. აღსანიშნავია კერძებია კოკ აუვ ვენი, ბუიაბესი და სხვადასხვა ტიპის ყველი.",
-      en: "French cuisine is renowned worldwide for its diversity and quality, featuring a wide array of regional dishes and cooking styles, from rich sauces and gourmet pastries to fresh seafood and exquisite wines. Notable dishes include coq au vin, bouillabaisse, and various types of cheese.",
-    },
-    independenceDay: {
-      ka: "14 ივლისი (ბასტილიის დღე)",
-      en: "July 14 (Bastille Day)",
-    },
-    img: franceFlag,
-  },
-];
+// export const detailedInfo: DetailedInfo[] = [
+//   {
+//     officialName: {
+//       ka: "საქართველო",
+//       en: "Georgia",
+//     },
+//     capital: {
+//       ka: "თბილისი",
+//       en: "Tbilisi",
+//     },
+//     population: 3688647,
+//     area: 69700,
+//     region: {
+//       ka: "ევრაზია",
+//       en: "Eurasia",
+//     },
+//     officialLanguage: {
+//       ka: "ქართული",
+//       en: "Georgian",
+//     },
+//     currency: {
+//       ka: "საქართველოს ლარი (GEL)",
+//       en: "Georgian Lari (GEL)",
+//     },
+//     majorCities: {
+//       ka: "თბილისი, ბათუმი, ქუთაისი, რუსთავი, ზუგდიდი",
+//       en: "Tbilisi, Batumi, Kutaisi, Rustavi, Zugdidi",
+//     },
+//     cuisineDescription: {
+//       ka: "ქართული სამზარეულო ცნობილია მდიდარი გემოების და უნიკალური კერძების გამო, რომელშიც შემავალია ბევრი ახალი გული და სანელებელი. მნიშნვნელოვანი კერძებია ხაჭაპური (ჩიზით სავსე პური), ხინკალი (პური) და პხალი (ბოსტნეულის პასტა). ქვეყანა ასევე ცნობილი არის თავისი ღვინით, რომლის წარმოების ტრადიცია რამდენიმე ათასწლეულის განმავლობაში გრძელდება, განსაკუთრებით კახეთის რეგიონში.",
+//       en: "Georgian cuisine is known for its rich flavors and unique dishes, featuring a variety of fresh herbs and spices. Notable foods include khachapuri (cheese-filled bread), khinkali (dumplings), and pkhali (vegetable spreads). The country is also famous for its wine, with a winemaking tradition that dates back thousands of years, particularly in the Kakheti region.",
+//     },
+//     independenceDay: {
+//       ka: "26 მაისი (დამოუკიდებლობის დღე)",
+//       en: "May 26 (Independence Day)",
+//     },
+
+//   },
+//   {
+//     officialName: {
+//       ka: "გერმანიის ფედერალური რესპუბლიკა",
+//       en: "Federal Republic of Germany",
+//     },
+//     capital: {
+//       ka: "ბერლინი",
+//       en: "Berlin",
+//     },
+//     population: 82719540,
+//     area: 357022,
+//     region: {
+//       ka: "ევროპა",
+//       en: "Europe",
+//     },
+//     officialLanguage: {
+//       ka: "გერმანული",
+//       en: "German",
+//     },
+//     currency: {
+//       ka: "ევრო (€)",
+//       en: "Euro (€)",
+//     },
+//     majorCities: {
+//       ka: "ბერლინი, მიუნხენი, ფრანკფურტი, ჰამბურგი, კოლონი",
+//       en: "Berlin, Munich, Frankfurt, Hamburg, Cologne",
+//     },
+//     cuisineDescription: {
+//       ka: "გერმანული სამზარეულო მრავალფეროვანია და გულუხვია, ცნობილი თავისი ვარიაციის საკვების, პურისა და რეგიონალური კერძების გამო. პოპულარული კერძებია ბრატვურლე, კეპლახი, პრეტცელი და შნიცელი, რომელიც განსხვავებული რეგიონალური ლუდების რაოდენობით სრულდება. თითოეულ რეგიონს აქვს საკუთარი სპეციალობები, ადგილობრივი ტრადიციებისა და ინგრედიენტების საებე.",
+//       en: "German cuisine is diverse and hearty, known for its variety of sausages, bread, and regional dishes. Popular foods include bratwurst, sauerkraut, pretzels, and schnitzel, complemented by a wide range of regional beers. Each area has its own specialties, reflecting local traditions and ingredients.",
+//     },
+//     independenceDay: {
+//       ka: "3 ოქტომბერი (გერმანიის ერთობის დღე)",
+//       en: "October 3 (German Unity Day)",
+//     },
+
+//   },
+//   {
+//     officialName: {
+//       ka: "ფრანგული რესპუბლიკა",
+//       en: "French Republic",
+//     },
+//     capital: {
+//       ka: "პარიზი",
+//       en: "Paris",
+//     },
+//     population: 68373433,
+//     area: 551695,
+//     region: {
+//       ka: "ევროპა",
+//       en: "Europe",
+//     },
+//     officialLanguage: {
+//       ka: "ფრანგული",
+//       en: "French",
+//     },
+//     currency: {
+//       ka: "ევრო (€)",
+//       en: "Euro (€)",
+//     },
+//     majorCities: {
+//       ka: "პარიზი, მარსელი, ლიონი, ტულუზა, ნიცა",
+//       en: "Paris, Marseille, Lyon, Toulouse, Nice",
+//     },
+//     cuisineDescription: {
+//       ka: "ფრანგული სამზარეულო ცნობილია თავისი მრავალფეროვნებითა და ხარისხით, მდიდარი სოუსებისა და გურმანი საკვების ფართო სპექტრით, ახალი ზღვის პროდუქტებისა და გემრიელი ღვინის. აღსანიშნავია კერძებია კოკ აუვ ვენი, ბუიაბესი და სხვადასხვა ტიპის ყველი.",
+//       en: "French cuisine is renowned worldwide for its diversity and quality, featuring a wide array of regional dishes and cooking styles, from rich sauces and gourmet pastries to fresh seafood and exquisite wines. Notable dishes include coq au vin, bouillabaisse, and various types of cheese.",
+//     },
+//     independenceDay: {
+//       ka: "14 ივლისი (ბასტილიის დღე)",
+//       en: "July 14 (Bastille Day)",
+//     },
+
+//   },
+// ];
 export const services: Service[] = [
   {
     title: {
@@ -309,38 +288,38 @@ export const destination: Destination[] = [
   },
 ];
 
-export const countries: Country[] = [
-  {
-    id: 1,
-    infoLink: "https://en.wikipedia.org/wiki/Georgia_(country)",
-    img: georgiaFlag,
-    name: { ka: "საქართველო", en: "Georgia" },
-    capitalCity: { ka: "თბილისი", en: "Tbilisi" },
-    population: 3688647,
-    like: 0,
-    isDeleted: false,
-  },
-  {
-    id: 2,
-    infoLink: "https://en.wikipedia.org/wiki/Germany",
-    img: germanyFlag,
-    name: { ka: "გერმანია", en: "Germany" },
-    capitalCity: { ka: "ბერლინი", en: "Berlin" },
-    population: 82719540,
-    like: 0,
-    isDeleted: false,
-  },
-  {
-    id: 3,
-    infoLink: "https://en.wikipedia.org/wiki/France",
-    img: franceFlag,
-    name: { ka: "საფრანგეთი", en: "France" },
-    capitalCity: { ka: "პარიზი", en: "Paris" },
-    population: 68373433,
-    like: 0,
-    isDeleted: false,
-  },
-];
+// export const countries: Country[] = [
+//   {
+//     id: 1,
+//     infoLink: "https://en.wikipedia.org/wiki/Georgia_(country)",
+//
+//     name: { ka: "საქართველო", en: "Georgia" },
+//     capitalCity: { ka: "თბილისი", en: "Tbilisi" },
+//     population: 3688647,
+//     like: 0,
+//     isDeleted: false,
+//   },
+//   {
+//     id: 2,
+//     infoLink: "https://en.wikipedia.org/wiki/Germany",
+//
+//     name: { ka: "გერმანია", en: "Germany" },
+//     capitalCity: { ka: "ბერლინი", en: "Berlin" },
+//     population: 82719540,
+//     like: 0,
+//     isDeleted: false,
+//   },
+//   {
+//     id: 3,
+//     infoLink: "https://en.wikipedia.org/wiki/France",
+//
+//     name: { ka: "საფრანგეთი", en: "France" },
+//     capitalCity: { ka: "პარიზი", en: "Paris" },
+//     population: 68373433,
+//     like: 0,
+//     isDeleted: false,
+//   },
+// ];
 export const languages: Language[] = [
   { path: "/ka/home", lang: "GEO" },
   { path: "/en/home", lang: "ENG" },
@@ -415,10 +394,7 @@ export const cardFooterContent: basicContent = {
   ka: "ინფორმაცია",
   en: "Info",
 };
-export const restoreBtnContent: basicContent = {
-  ka: "აღდგენა",
-  en: "Restore",
-};
+
 export const labelsCard = {
   ka: {
     name: "დასახელება",
@@ -472,6 +448,7 @@ export const createFormPlaceholder = {
     population: "მოსახლეობა",
     Infolink: "ლინკი",
     btnVal: "ქვეყნის დამატება",
+    updateVal: "ქვეყნის რედაქტირება",
   },
   en: {
     name: "Country Name",
@@ -479,6 +456,7 @@ export const createFormPlaceholder = {
     population: "Population",
     Infolink: "Info link",
     btnVal: "Create Country",
+    updateVal: "Update country",
   },
 };
 interface changeLabels {
@@ -499,3 +477,35 @@ export const otpInputLabels = {
   },
   en: { password: "Enter One Time Password", code: "The code you entered is:" },
 };
+export interface Country {
+  id: string;
+  infoLink: string;
+  name: LocalizedString;
+  capitalCity: LocalizedString;
+  population: number;
+  like: number;
+  img: string;
+  detaildInfo: DetailedInfo | null;
+}
+export interface CountryUpdates {
+  name: { ka: string; en: string };
+  capitalCity: { ka: string; en: string };
+  population: number;
+  infoLink: string;
+  img: string;
+  like?: number;
+  detaildInfo?: DetailedInfo | null;
+}
+export interface DetailedInfo {
+  area: number;
+  region: LocalizedString;
+  officialLanguage: LocalizedString;
+  currency: LocalizedString;
+  majorCities: LocalizedString;
+  cuisineDescription: LocalizedString;
+  independenceDay: LocalizedString;
+}
+export interface LocalizedString {
+  ka: string;
+  en: string;
+}

@@ -31,3 +31,12 @@
   flex-direction: column;
   gap: 10px;
 }
+.editBtn {
+  background-color: orange;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  width: 150px;
+}
+.editBtn:hover {
+  background-color: rgb(255, 146, 3);
+}

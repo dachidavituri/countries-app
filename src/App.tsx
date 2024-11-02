@@ -11,7 +11,8 @@ import { Suspense } from "react";
 import CountryInfoView from "^/home/views/countryInfo";
 import NotFoundVIew from "^/notFound/views/notFoundView";
 import OtpView from "^/otp/views/otp";
-
+// reset form when updated or created
+// check everything
 const App: React.FC = () => {
   return (
     <div className="App">

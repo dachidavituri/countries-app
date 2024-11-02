@@ -4,20 +4,88 @@ import Like from "./likes";
 import Sort from "./btnsSort";
 import Form from "./form";
 import Delete from "./delete";
-import Restore from "./restore";
 import { Country } from "@/info";
 import { Link } from "react-router-dom";
 import { useReducer } from "react";
-import { countries } from "@/info";
 import { reducer } from "^/home/components/card/reducer";
 import { useState } from "react";
 import { validateCountry } from "./validation";
+import { useEffect } from "react";
+import axios from "axios";
+import { CountryUpdates } from "@/info";
 
 interface CardProps {
   children: (country: Country) => React.ReactNode;
   lang: "ka" | "en";
 }
 const Card: React.FC<CardProps> = ({ children, lang }) => {
+  const [countriesList, dispatch] = useReducer(reducer, []);
+  const [editId, setEditId] = useState<string>("");
+  // functions  for api calls -------------
+  const deleteCountry = async (id: string) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/countries/${id}`,
+      );
+      console.log(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const addCountry = async (countryObj: Country) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/countries",
+        countryObj,
+      );
+      console.log(`country added successfully ${response.data}`);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const updateCountryLike = async (id: string) => {
+    const country = countriesList.find((country) => country.id === id);
+    if (!country) {
+      console.error(`Country with id ${id} not found`);
+      return;
+    }
+    const updatedCountry = {
+      ...country,
+      like: country.like + 1,
+    };
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/countries/${id}`,
+        updatedCountry,
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error updating country:", error);
+    }
+  };
+  useEffect(() => {
+    const getCountries = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/countries`);
+        dispatch({ type: "get_initial_country", payload: response.data });
+      } catch (err) {
+        console.log(`error while fetching ${err}`);
+      }
+    };
+    getCountries();
+  }, []);
+  // functions  for api calls -------------
+  const handleEdit = (id: string) => {
+    setEditId(id);
+    setErrors({
+      name: { ka: "", en: "" },
+      capitalCity: { ka: "", en: "" },
+      population: { ka: "", en: "" },
+      infoLink: { ka: "", en: "" },
+      img: { ka: "", en: "" },
+    });
+  };
   const [errors, setErrors] = useState({
     name: { ka: "", en: "" },
     capitalCity: { ka: "", en: "" },
@@ -25,18 +93,16 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
     infoLink: { ka: "", en: "" },
     img: { ka: "", en: "" },
   });
-  const [countriesList, dispatch] = useReducer(reducer, countries);
-  const handleCountryUpvote = (id: number) => {
+  const handleCountryUpvote = (id: string) => {
     dispatch({ type: "upvote", payload: { id } });
+    updateCountryLike(id);
   };
   const sortCountriesByLike = (sortType: "asc" | "desc") => {
     dispatch({ type: "sort", payload: { sortType } });
   };
-  const handledeleteCountry = (id: number) => {
+  const handledeleteCountry = (id: string) => {
     dispatch({ type: "delete", payload: { id } });
-  };
-  const handleRestoreCountry = (id: number) => {
-    dispatch({ type: "restore", payload: { id } });
+    deleteCountry(id);
   };
   const handleCountryCreate = (countryFields: {
     name: { ka: string; en: string };
@@ -53,35 +119,60 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
     if (!hasError) {
       const country: Country = {
         ...countryFields,
-        id: 0,
+        id: String(countriesList.length + 1),
         like: 0,
-        isDeleted: false,
+        detaildInfo: null,
       };
       dispatch({ type: "create", payload: { country } });
+      addCountry(country);
     }
   };
-  const sortedByDelete = countriesList.slice().sort((a, b) => {
-    if (a.isDeleted && !b.isDeleted) return 1;
-    if (!a.isDeleted && b.isDeleted) return -1;
-    return 0;
-  });
+  const handleCountryUpdate = async (id: string, updates: CountryUpdates) => {
+    const errors = validateCountry(updates);
+    setErrors(errors);
+    const hasError = Object.values(errors).some(
+      (error) => error.ka !== "" || error.en !== "",
+    );
+    if (hasError) {
+      return;
+    }
+
+    dispatch({ type: "update", payload: { id, updates } });
+
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/countries/${id}`,
+        updates,
+      );
+      console.log(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <section className={styles.countriesSection}>
       <div className={styles.additional}>
-        <Form onCountryCreate={handleCountryCreate} errors={errors} />
+        <Form
+          onCountryCreate={handleCountryCreate}
+          errors={errors}
+          onEditId={editId}
+          countriesList={countriesList}
+          onCountryUpdate={handleCountryUpdate}
+          setEditId={setEditId}
+        />
         <Sort sortCountriesByLike={sortCountriesByLike} />
       </div>
       <div className={styles.countries}>
-        {sortedByDelete.map((country) => (
+        {countriesList.map((country) => (
           <div key={country.id}>
-            <Restore onRestore={() => handleRestoreCountry(country.id)} />
-            <div
-              className={`${styles.countryCard} ${
-                country.isDeleted ? styles.deleted : ""
-              }`}
-              key={country.id}
-              style={{ pointerEvents: country.isDeleted ? "none" : "auto" }}
+            <button
+              onClick={() => handleEdit(country.id)}
+              className={styles.editBtn}
             >
+              {lang == "en" ? "edit" : "რედაქტირება"}
+            </button>
+            <div className={`${styles.countryCard}`} key={country.id}>
               <Link
                 key={country.id}
                 to={`/${lang}/country/${String(country.id)}`}
