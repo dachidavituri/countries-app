@@ -44,7 +44,7 @@ const Form: React.FC<FormProps> = ({
   onCountryUpdate,
   setEditId,
 }) => {
-  const fileInputRef = useRef<HTMLInputElement | null>(null); 
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [activeLang, setActiveLang] = useState<"ka" | "en">("ka");
   const lang = useLangauge();
   const [createForm, setCreateForm] = useState({
@@ -116,7 +116,7 @@ const Form: React.FC<FormProps> = ({
     const errors = validateCountry(createForm);
     const hasGeoError = Object.values(errors).some((error) => error.ka);
     const hasEngError = Object.values(errors).some((error) => error.en);
-    if (hasGeoError && !hasEngError) setActiveLang("ka")
+    if (hasGeoError && !hasEngError) setActiveLang("ka");
     if (hasEngError && !hasGeoError) setActiveLang("en");
     if (!hasGeoError && !hasEngError) resetForm();
     const countryToEdit = countriesList.find(
@@ -194,7 +194,7 @@ const Form: React.FC<FormProps> = ({
           type="file"
           onChange={handleFileChange}
           accept=".jpg, .png"
-          ref = {fileInputRef}
+          ref={fileInputRef}
         />
         <p className={styles.error}>{errors.img[activeLang]}</p>
         <input
