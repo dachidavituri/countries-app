@@ -13,6 +13,7 @@ import { changeLanugeageTab } from "@/info";
 import { validateCountry } from "../validation";
 import { Country } from "@/info";
 import { CountryUpdates } from "@/info";
+import { useRef } from "react";
 
 interface FormProps {
   onCountryCreate: (countryFields: {
@@ -34,6 +35,7 @@ interface FormProps {
   onCountryUpdate: (id: string, updates: CountryUpdates) => void;
   setEditId: Dispatch<SetStateAction<string>>;
 }
+
 const Form: React.FC<FormProps> = ({
   onCountryCreate,
   errors,
@@ -42,6 +44,7 @@ const Form: React.FC<FormProps> = ({
   onCountryUpdate,
   setEditId,
 }) => {
+  const fileInputRef = useRef<HTMLInputElement | null>(null); 
   const [activeLang, setActiveLang] = useState<"ka" | "en">("ka");
   const lang = useLangauge();
   const [createForm, setCreateForm] = useState({
@@ -103,6 +106,9 @@ const Form: React.FC<FormProps> = ({
       infoLink: "",
       img: "",
     });
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -110,9 +116,7 @@ const Form: React.FC<FormProps> = ({
     const errors = validateCountry(createForm);
     const hasGeoError = Object.values(errors).some((error) => error.ka);
     const hasEngError = Object.values(errors).some((error) => error.en);
-    if (hasGeoError && !hasEngError) {
-      setActiveLang("ka");
-    }
+    if (hasGeoError && !hasEngError) setActiveLang("ka")
     if (hasEngError && !hasGeoError) setActiveLang("en");
     if (!hasGeoError && !hasEngError) resetForm();
     const countryToEdit = countriesList.find(
@@ -190,6 +194,7 @@ const Form: React.FC<FormProps> = ({
           type="file"
           onChange={handleFileChange}
           accept=".jpg, .png"
+          ref = {fileInputRef}
         />
         <p className={styles.error}>{errors.img[activeLang]}</p>
         <input

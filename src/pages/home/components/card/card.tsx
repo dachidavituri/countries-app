@@ -64,6 +64,17 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
       console.error("Error updating country:", error);
     }
   };
+  const updateCountry = async (id: string, updates: CountryUpdates) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/countries/${id}`,
+        updates,
+      );
+      console.log(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
     const getCountries = async () => {
       try {
@@ -136,18 +147,8 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
     if (hasError) {
       return;
     }
-
     dispatch({ type: "update", payload: { id, updates } });
-
-    try {
-      const response = await axios.put(
-        `http://localhost:3000/countries/${id}`,
-        updates,
-      );
-      console.log(response.data);
-    } catch (err) {
-      console.log(err);
-    }
+    updateCountry(id, updates);
   };
 
   return (
