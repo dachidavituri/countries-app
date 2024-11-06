@@ -11,33 +11,36 @@ import { Suspense } from "react";
 import CountryInfoView from "^/home/views/countryInfo";
 import NotFoundVIew from "^/notFound/views/notFoundView";
 import OtpView from "^/otp/views/otp";
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/:lang" element={<Layout />}>
-            <Route
-              path="home"
-              element={
-                <Suspense fallback={<Loading />}>
-                  <HomePageView />
-                </Suspense>
-              }
-            />
+    <QueryClientProvider client={queryClient}>
+      <div className="App">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/:lang" element={<Layout />}>
+              <Route
+                path="home"
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <HomePageView />
+                  </Suspense>
+                }
+              />
 
-            <Route path="country/:id" element={<CountryInfoView />}></Route>
-            <Route path="about" element={<AboutPageView />}></Route>
-            <Route path="services" element={<ServicePageView />}></Route>
-            <Route path="contact" element={<ContactFormView />}></Route>
-            <Route path="otp" element={<OtpView />}></Route>
-          </Route>
-          <Route path="/" element={<Navigate to="/ka/home" />} />
-          <Route path="*" element={<NotFoundVIew />}></Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+              <Route path="country/:id" element={<CountryInfoView />}></Route>
+              <Route path="about" element={<AboutPageView />}></Route>
+              <Route path="services" element={<ServicePageView />}></Route>
+              <Route path="contact" element={<ContactFormView />}></Route>
+              <Route path="otp" element={<OtpView />}></Route>
+            </Route>
+            <Route path="/" element={<Navigate to="/ka/home" />} />
+            <Route path="*" element={<NotFoundVIew />}></Route>
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </QueryClientProvider>
   );
 };
 

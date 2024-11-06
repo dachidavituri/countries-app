@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { validateCountry } from "./validation";
 import { CountryUpdates } from "@/info";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   addCountry,
   deleteCountry,
@@ -17,13 +17,13 @@ import {
   updateCountry,
   updateCountryLike,
 } from "@/api/countries";
-import { queryClient } from "@/main";
 
 interface CardProps {
   children: (country: Country) => React.ReactNode;
   lang: "ka" | "en";
 }
 const Card: React.FC<CardProps> = ({ children, lang }) => {
+  const queryClient = useQueryClient();
   const [editId, setEditId] = useState<string>("");
   const [errors, setErrors] = useState({
     name: { ka: "", en: "" },
