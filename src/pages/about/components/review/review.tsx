@@ -7,8 +7,8 @@ const Review: React.FC = () => {
     <>
       <section className={styles.testimonials}>
         <h3 className={styles.smallTitle}>{review[lang].title}</h3>
-        {review[lang].testimonials.map((tesimonial) => (
-          <blockquote>{tesimonial}</blockquote>
+        {review[lang].testimonials.map((tesimonial, i) => (
+          <blockquote key={i}>{tesimonial}</blockquote>
         ))}
       </section>
       <footer className={styles.footer}>

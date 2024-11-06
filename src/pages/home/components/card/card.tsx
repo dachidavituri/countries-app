@@ -6,87 +6,57 @@ import Form from "./form";
 import Delete from "./delete";
 import { Country } from "@/info";
 import { Link } from "react-router-dom";
-import { useReducer } from "react";
-import { reducer } from "^/home/components/card/reducer";
 import { useState } from "react";
 import { validateCountry } from "./validation";
-import { useEffect } from "react";
-import axios from "axios";
 import { CountryUpdates } from "@/info";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  addCountry,
+  deleteCountry,
+  getCountries,
+  updateCountry,
+  updateCountryLike,
+} from "@/api/countries";
+import { queryClient } from "@/main";
 
 interface CardProps {
   children: (country: Country) => React.ReactNode;
   lang: "ka" | "en";
 }
 const Card: React.FC<CardProps> = ({ children, lang }) => {
-  const [countriesList, dispatch] = useReducer(reducer, []);
   const [editId, setEditId] = useState<string>("");
-  // functions  for api calls -------------
-  const deleteCountry = async (id: string) => {
-    try {
-      const response = await axios.delete(
-        `http://localhost:3000/countries/${id}`,
-      );
-      console.log(response.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const addCountry = async (countryObj: Country) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/countries",
-        countryObj,
-      );
-      console.log(`country added successfully ${response.data}`);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const updateCountryLike = async (id: string) => {
-    const country = countriesList.find((country) => country.id === id);
-    if (!country) {
-      console.error(`Country with id ${id} not found`);
-      return;
-    }
-    const updatedCountry = {
-      ...country,
-      like: country.like + 1,
-    };
-    try {
-      const response = await axios.put(
-        `http://localhost:3000/countries/${id}`,
-        updatedCountry,
-      );
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error updating country:", error);
-    }
-  };
-  const updateCountry = async (id: string, updates: CountryUpdates) => {
-    try {
-      const response = await axios.put(
-        `http://localhost:3000/countries/${id}`,
-        updates,
-      );
-      console.log(response.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  useEffect(() => {
-    const getCountries = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3000/countries`);
-        dispatch({ type: "get_initial_country", payload: response.data });
-      } catch (err) {
-        console.log(`error while fetching ${err}`);
-      }
-    };
-    getCountries();
-  }, []);
-  // functions  for api calls -------------
+  const [errors, setErrors] = useState({
+    name: { ka: "", en: "" },
+    capitalCity: { ka: "", en: "" },
+    population: { ka: "", en: "" },
+    infoLink: { ka: "", en: "" },
+    img: { ka: "", en: "" },
+  });
+  const {
+    data: countries,
+    refetch,
+    isLoading,
+  } = useQuery({
+    queryKey: ["countries-list"],
+    queryFn: getCountries,
+  });
+  const { mutate: mutateDelete } = useMutation({
+    mutationFn: (id: string) => deleteCountry(id),
+    onSuccess: () => refetch(),
+  });
+  const { mutate: mutateUpvote } = useMutation({
+    mutationFn: ({ id, countries }: { id: string; countries: Country[] }) =>
+      updateCountryLike(id, countries),
+  });
+  const { mutate: mutateUpdateCountry } = useMutation({
+    mutationFn: ({ id, updates }: { id: string; updates: CountryUpdates }) =>
+      updateCountry(id, updates),
+    onSuccess: () => refetch(),
+  });
+  const { mutate: mutateCreateCountry, isPending } = useMutation({
+    mutationFn: (country: Country) => addCountry(country),
+    onSuccess: () => refetch(),
+  });
   const handleEdit = (id: string) => {
     setEditId(id);
     setErrors({
@@ -97,23 +67,26 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
       img: { ka: "", en: "" },
     });
   };
-  const [errors, setErrors] = useState({
-    name: { ka: "", en: "" },
-    capitalCity: { ka: "", en: "" },
-    population: { ka: "", en: "" },
-    infoLink: { ka: "", en: "" },
-    img: { ka: "", en: "" },
-  });
+
   const handleCountryUpvote = (id: string) => {
-    dispatch({ type: "upvote", payload: { id } });
-    updateCountryLike(id);
+    queryClient.setQueryData(["countries-list"], (oldData: Country[]) => {
+      return oldData.map((country) =>
+        country.id === id ? { ...country, like: country.like + 1 } : country,
+      );
+    });
+    if (countries) {
+      mutateUpvote({ id, countries });
+    }
   };
   const sortCountriesByLike = (sortType: "asc" | "desc") => {
-    dispatch({ type: "sort", payload: { sortType } });
+    if (!Array.isArray(countries)) return;
+    const sortedCountries = [...countries].sort((a, b) => {
+      return sortType === "asc" ? a.like - b.like : b.like - a.like;
+    });
+    queryClient.setQueryData(["countries-list"], sortedCountries);
   };
   const handledeleteCountry = (id: string) => {
-    dispatch({ type: "delete", payload: { id } });
-    deleteCountry(id);
+    mutateDelete(id);
   };
   const handleCountryCreate = (countryFields: {
     name: { ka: string; en: string };
@@ -130,12 +103,11 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
     if (!hasError) {
       const country: Country = {
         ...countryFields,
-        id: String(countriesList.length + 1),
+        id: String(countries && countries.length + 1),
         like: 0,
         detaildInfo: null,
       };
-      dispatch({ type: "create", payload: { country } });
-      addCountry(country);
+      mutateCreateCountry(country);
     }
   };
   const handleCountryUpdate = async (id: string, updates: CountryUpdates) => {
@@ -147,10 +119,11 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
     if (hasError) {
       return;
     }
-    dispatch({ type: "update", payload: { id, updates } });
-    updateCountry(id, updates);
+    mutateUpdateCountry({ id, updates });
   };
-
+  if (isLoading) {
+    return <h1>Loading</h1>;
+  }
   return (
     <section className={styles.countriesSection}>
       <div className={styles.additional}>
@@ -158,42 +131,44 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
           onCountryCreate={handleCountryCreate}
           errors={errors}
           onEditId={editId}
-          countriesList={countriesList}
+          countriesList={countries}
           onCountryUpdate={handleCountryUpdate}
           setEditId={setEditId}
+          isPending={isPending}
         />
         <Sort sortCountriesByLike={sortCountriesByLike} />
       </div>
       <div className={styles.countries}>
-        {countriesList.map((country) => (
-          <div key={country.id}>
-            <button
-              onClick={() => handleEdit(country.id)}
-              className={styles.editBtn}
-            >
-              {lang == "en" ? "edit" : "რედაქტირება"}
-            </button>
-            <div className={`${styles.countryCard}`} key={country.id}>
-              <Link
-                key={country.id}
-                to={`/${lang}/country/${String(country.id)}`}
-                style={{ textDecoration: "none", color: "inherit" }}
+        {Array.isArray(countries) &&
+          countries.map((country) => (
+            <div key={country.id}>
+              <button
+                onClick={() => handleEdit(country.id)}
+                className={styles.editBtn}
               >
-                {children(country)}
-              </Link>
-              <div className={styles.likeDelete}>
-                <Like
-                  country={country}
-                  upVote={() => handleCountryUpvote(country.id)}
-                />
-                <Delete
-                  onDeleteCountry={() => handledeleteCountry(country.id)}
-                />
+                {lang == "en" ? "edit" : "რედაქტირება"}
+              </button>
+              <div className={`${styles.countryCard}`} key={country.id}>
+                <Link
+                  key={country.id}
+                  to={`/${lang}/country/${String(country.id)}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  {children(country)}
+                </Link>
+                <div className={styles.likeDelete}>
+                  <Like
+                    country={country}
+                    upVote={() => handleCountryUpvote(country.id)}
+                  />
+                  <Delete
+                    onDeleteCountry={() => handledeleteCountry(country.id)}
+                  />
+                </div>
+                <CardFooter link={country.infoLink} />
               </div>
-              <CardFooter link={country.infoLink} />
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </section>
   );

@@ -1,29 +1,35 @@
 import styles from "./countryInfo.module.css";
 import useLangauge from "@/useLanguage";
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
-import axios from "axios";
 import { detailedTitle } from "@/info";
-import { Country } from "@/info";
-
+import { getCountryById } from "@/api/countries";
+import { useQuery } from "@tanstack/react-query";
 const CountryInfo: React.FC = () => {
-  const [detailedCountry, setDetailedCountry] = useState<Country | null>(null);
   const { id } = useParams();
   const lang = useLangauge();
-  useEffect(() => {
-    const getCountryById = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3000/countries/${id}`,
-        );
-        setDetailedCountry(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getCountryById();
-  }, [id]);
+  const {
+    data: detailedCountry,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["countries-list", id],
+    queryFn: () => getCountryById(id),
+  });
+  if (isLoading) {
+    return (
+      <div className={styles.countryInfo}>
+        Country information is loading... Please wait.
+      </div>
+    );
+  }
+  if (isError) {
+    return (
+      <div className={styles.countryInfo}>
+        Country information is errored... try again later.
+      </div>
+    );
+  }
+
   if (!detailedCountry?.detaildInfo) {
     return (
       <div className={styles.countryInfo}>Country information not found.</div>
