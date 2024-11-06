@@ -1,7 +1,13 @@
 import axios from "axios";
 import { randomUUID } from "crypto";
+import { writeFileSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 const url = "https://restcountries.com/v3.1/all";
-const jsonUrl = "http://localhost:3000/countries";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const databasePath = join(__dirname, "database.json");
+
 const fetchAllCountries = async () => {
   let formattedCountries = [];
   try {
@@ -73,13 +79,11 @@ const fetchAllCountries = async () => {
   } catch (err) {
     console.log(err);
   }
-  for (const country of formattedCountries) {
-    try {
-      const response = await axios.post(jsonUrl, country);
-      console.log("coutries addded successfully");
-    } catch (err) {
-      console.log(err);
-    }
+  try {
+    const database = { countries: formattedCountries };
+    writeFileSync(databasePath, JSON.stringify(database, null, 2), "utf-8");
+  } catch (err) {
+    console.log("error while writing data", err);
   }
 };
 fetchAllCountries();
