@@ -12,7 +12,15 @@ import { CountryUpdates } from "@/info";
 import { useQueryClient } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useSearchParams } from "react-router-dom";
-import { useFetch } from "./hooks/useFetch";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import {
+  getCountries,
+  getCountriesBySort,
+  addCountry,
+  updateCountry,
+  deleteCountry,
+  updateCountryLike,
+} from "@/api/countries";
 interface CardProps {
   children: (country: Country) => React.ReactNode;
   lang: "ka" | "en";
@@ -29,17 +37,55 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
     img: { ka: "", en: "" },
   });
   const {
-    countries,
+    data: countries,
+    refetch,
     isLoading,
-    countriesSorted,
-    refetchSorted,
-    mutateDelete,
-    mutateUpvote,
-    mutateCreateCountry,
-    mutateUpdateCountry,
-    isPending,
-  } = useFetch(searchParams);
+  } = useQuery({
+    queryKey: ["countries-list"],
+    queryFn: getCountries,
+  });
+  // const {
+  //   data,
+  //   isFetching,
+  //   fetchNextPage,
+  //   hasNextPage,
+  //   error
+  // } = useInfiniteQuery({
+  //   queryKey: ['countries'],
+  //   queryFn: ({ pageParam = 1 }) => fetchInfiniteCountries(pageParam as number),
 
+  //   getNextPageParam: (lastPage, allPages) => lastPage.nextCursor,
+  //   getPreviousPageParam: (firstPage, allPages) => firstPage.prevCursor,
+  // });
+  const { data: countriesSorted, refetch: refetchSorted } = useQuery({
+    queryKey: ["countries-ordered-list", searchParams.get("sort")],
+    queryFn: () => {
+      const sortType = searchParams.get("sort") as "asc" | "desc";
+      return getCountriesBySort(sortType);
+    },
+    enabled: Boolean(searchParams.get("sort")),
+  });
+  // delete country
+  const { mutate: mutateDelete } = useMutation({
+    mutationFn: (id: string) => deleteCountry(id),
+    onSuccess: () => refetch(),
+  });
+  // update like in country
+  const { mutate: mutateUpvote } = useMutation({
+    mutationFn: ({ id, countries }: { id: string; countries: Country[] }) =>
+      updateCountryLike(id, countries),
+  });
+  //   update whole country
+  const { mutate: mutateUpdateCountry } = useMutation({
+    mutationFn: ({ id, updates }: { id: string; updates: CountryUpdates }) =>
+      updateCountry(id, updates),
+    onSuccess: () => refetch(),
+  });
+  // create country
+  const { mutate: mutateCreateCountry, isPending } = useMutation({
+    mutationFn: (country: Country) => addCountry(country),
+    onSuccess: () => refetch(),
+  });
   const sortCountriesByLike = (sortType: "asc" | "desc") => {
     refetchSorted();
     setSearchParams({ sort: sortType });
