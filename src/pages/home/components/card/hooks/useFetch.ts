@@ -6,6 +6,7 @@ import {
   updateCountry,
   deleteCountry,
   updateCountryLike,
+  // fetchInfiniteCountries,
 } from "@/api/countries";
 import { Country, CountryUpdates } from "@/info";
 export const useFetch = (searchParams: URLSearchParams) => {
@@ -18,6 +19,20 @@ export const useFetch = (searchParams: URLSearchParams) => {
     queryKey: ["countries-list"],
     queryFn: getCountries,
   });
+  // const {
+  //   data,
+  //   isFetching,
+  //   fetchNextPage,
+  //   hasNextPage,
+  //   error
+  // } = useInfiniteQuery({
+  //   queryKey: ['countries'],
+  //   queryFn: ({ pageParam = 1 }) => fetchInfiniteCountries(pageParam as number),
+
+  //   getNextPageParam: (lastPage, allPages) => lastPage.nextCursor,
+  //   getPreviousPageParam: (firstPage, allPages) => firstPage.prevCursor,
+  // });
+
   //   sorted country
   const { data: countriesSorted, refetch: refetchSorted } = useQuery({
     queryKey: ["countries-ordered-list", searchParams.get("sort")],

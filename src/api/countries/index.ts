@@ -8,6 +8,17 @@ export const getCountries = async () => {
     console.log(err);
   }
 };
+export const fetchInfiniteCountries = async ({ pageParam = 1 }) => {
+  try {
+    const response = await httpClient.get(
+      `/countries?_page=${pageParam}&_limit=2`,
+    );
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const getCountriesBySort = async (sortType: "asc" | "desc") => {
   const endpoint = `/countries?_sort=${sortType === "asc" ? "like" : "like&_order=desc"}`;
   try {
