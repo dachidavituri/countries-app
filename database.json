@@ -143,22 +143,7 @@
         }
       },
       "id": "3"
-    },
-    {
-      "name": {
-        "ka": "dachi",
-        "en": "italy"
-      },
-      "capitalCity": {
-        "ka": "rome",
-        "en": "romeee"
-      },
-      "population": "9",
-      "infoLink": "https://en.wikipedia.org/wiki/Italy",
-      "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARMAAAC3CAMAAAAGjUrGAAAAFVBMVEX///8AkkbOKzcAjz56uI/ehIjNHy1xf0V9AAAA/klEQVR4nO3QSQ0AIAADsHH6l4yKPUhaCc2oWTs9586aOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHixIkTJ06cOHHy4ckD5KrN4eD2boIAAAAASUVORK5CYII=",
-      "like": 13,
-      "detaildInfo": null,
-      "id": "4"
     }
+    
   ]
 }
