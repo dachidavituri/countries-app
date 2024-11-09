@@ -17,7 +17,7 @@ interface CardProps {
   children: (country: Country) => React.ReactNode;
   lang: "ka" | "en";
 }
-// make with limit http://localhost:3000/countries?_limit=2
+// make with limit http://localhost:3000/countries?_limit=22
 const Card: React.FC<CardProps> = ({ children, lang }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
