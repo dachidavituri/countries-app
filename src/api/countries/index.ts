@@ -1,10 +1,17 @@
 import { httpClient } from "@/api";
 import { Country, CountryUpdates } from "@/info";
-import { AxiosResponse } from "axios";
 export const getCountries = async () => {
   try {
-    const response: AxiosResponse<Country[]> =
-      await httpClient.get("/countries");
+    const response = await httpClient.get<Country[]>("/countries");
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+export const getCountriesBySort = async (sortType: "asc" | "desc") => {
+  const endpoint = `/countries?_sort=${sortType === "asc" ? "" : "-"}like`;
+  try {
+    const response = await httpClient.get<Country[]>(endpoint);
     return response.data;
   } catch (err) {
     console.log(err);
@@ -12,9 +19,7 @@ export const getCountries = async () => {
 };
 export const getCountryById = async (id: string | undefined) => {
   try {
-    const response: AxiosResponse<Country> = await httpClient.get(
-      `/countries/${id}`,
-    );
+    const response = await httpClient.get<Country>(`/countries/${id}`);
     console.log(response);
     return response.data;
   } catch (err) {
@@ -23,9 +28,7 @@ export const getCountryById = async (id: string | undefined) => {
 };
 export const deleteCountry = async (id: string) => {
   try {
-    const response: AxiosResponse<Country> = await httpClient.delete(
-      `/countries/${id}`,
-    );
+    const response = await httpClient.delete<Country>(`/countries/${id}`);
     console.log(response.data);
   } catch (err) {
     console.log(err);
@@ -33,10 +36,7 @@ export const deleteCountry = async (id: string) => {
 };
 export const addCountry = async (countryObj: Country) => {
   try {
-    const response: AxiosResponse<Country> = await httpClient.post(
-      "/countries",
-      countryObj,
-    );
+    const response = await httpClient.post<Country>("/countries", countryObj);
     console.log(`country added successfully ${response.data}`);
   } catch (err) {
     console.log(err);
@@ -44,10 +44,7 @@ export const addCountry = async (countryObj: Country) => {
 };
 export const updateCountry = async (id: string, updates: CountryUpdates) => {
   try {
-    const response: AxiosResponse<Country> = await httpClient.put(
-      `/countries/${id}`,
-      updates,
-    );
+    const response = await httpClient.put<Country>(`/countries/${id}`, updates);
     console.log(response);
   } catch (err) {
     console.log(err);
@@ -68,7 +65,7 @@ export const updateCountryLike = async (
     like: country.like + 1,
   };
   try {
-    const response: AxiosResponse<Country> = await httpClient.put(
+    const response = await httpClient.put<Country>(
       `/countries/${id}`,
       updatedCountry,
     );

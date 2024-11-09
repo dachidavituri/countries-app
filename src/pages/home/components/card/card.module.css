@@ -16,6 +16,13 @@
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  height: 600px;
+  overflow: auto;
+}
+.wholeCountry {
+  position: absolute;
+  left: 0;
+  right: 0;
 }
 .likeDelete {
   display: flex;

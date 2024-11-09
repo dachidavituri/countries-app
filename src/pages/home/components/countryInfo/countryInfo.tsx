@@ -14,6 +14,8 @@ const CountryInfo: React.FC = () => {
   } = useQuery({
     queryKey: ["countries-list", id],
     queryFn: () => getCountryById(id),
+    gcTime: 1000 * 10,
+    staleTime: 1000 * 10,
   });
   if (isLoading) {
     return (
