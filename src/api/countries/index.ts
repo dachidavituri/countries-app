@@ -9,7 +9,7 @@ export const getCountries = async () => {
   }
 };
 export const getCountriesBySort = async (sortType: "asc" | "desc") => {
-  const endpoint = `/countries?_sort=${sortType === "asc" ? "" : "-"}like`;
+  const endpoint = `/countries?_sort=${sortType === "asc" ? "like" : "like&_order=desc"}`;
   try {
     const response = await httpClient.get<Country[]>(endpoint);
     return response.data;
