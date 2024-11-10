@@ -8,11 +8,16 @@ export const getCountries = async () => {
     console.log(err);
   }
 };
-export const fetchInfiniteCountries = async ({ pageParam = 1 }) => {
+export const fetchInfiniteCountries = async ({
+  per_page,
+}: {
+  per_page: number;
+}) => {
   try {
     const response = await httpClient.get(
-      `/countries?_page=${pageParam}&_limit=2`,
+      `/countries?_page=1&_limit=${per_page}`,
     );
+
     return response.data;
   } catch (err) {
     console.log(err);

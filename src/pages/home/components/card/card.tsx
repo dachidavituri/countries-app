@@ -6,20 +6,21 @@ import Form from "./form";
 import Delete from "./delete";
 import { Country } from "@/info";
 import { Link } from "react-router-dom";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { validateCountry } from "./validation";
 import { CountryUpdates } from "@/info";
 import { useQueryClient } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useSearchParams } from "react-router-dom";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useInfiniteQuery } from "@tanstack/react-query";
 import {
-  getCountries,
+  // getCountries,
   getCountriesBySort,
   addCountry,
   updateCountry,
   deleteCountry,
   updateCountryLike,
+  fetchInfiniteCountries,
 } from "@/api/countries";
 interface CardProps {
   children: (country: Country) => React.ReactNode;
@@ -36,27 +37,26 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
     infoLink: { ka: "", en: "" },
     img: { ka: "", en: "" },
   });
+  // const {
+  //   data: countries,
+  //   refetch,
+  //   isLoading,
+  // } = useQuery({
+  //   queryKey: ["countries-list"],
+  //   queryFn: getCountries,
+  // });
   const {
     data: countries,
-    refetch,
-    isLoading,
-  } = useQuery({
-    queryKey: ["countries-list"],
-    queryFn: getCountries,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["countries"],
+    queryFn: () => fetchInfiniteCountries({ per_page: 2 }),
+    getNextPageParam: (lastGroup) => lastGroup.nextOffset,
+    initialPageParam: 0,
   });
-  // const {
-  //   data,
-  //   isFetching,
-  //   fetchNextPage,
-  //   hasNextPage,
-  //   error
-  // } = useInfiniteQuery({
-  //   queryKey: ['countries'],
-  //   queryFn: ({ pageParam = 1 }) => fetchInfiniteCountries(pageParam as number),
-
-  //   getNextPageParam: (lastPage, allPages) => lastPage.nextCursor,
-  //   getPreviousPageParam: (firstPage, allPages) => firstPage.prevCursor,
-  // });
+  console.log(countries);
   const { data: countriesSorted, refetch: refetchSorted } = useQuery({
     queryKey: ["countries-ordered-list", searchParams.get("sort")],
     queryFn: () => {
@@ -68,7 +68,7 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
   // delete country
   const { mutate: mutateDelete } = useMutation({
     mutationFn: (id: string) => deleteCountry(id),
-    onSuccess: () => refetch(),
+    // onSuccess: () => refetch(),
   });
   // update like in country
   const { mutate: mutateUpvote } = useMutation({
@@ -79,27 +79,30 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
   const { mutate: mutateUpdateCountry } = useMutation({
     mutationFn: ({ id, updates }: { id: string; updates: CountryUpdates }) =>
       updateCountry(id, updates),
-    onSuccess: () => refetch(),
+    // onSuccess: () => refetch(),
   });
   // create country
   const { mutate: mutateCreateCountry, isPending } = useMutation({
     mutationFn: (country: Country) => addCountry(country),
-    onSuccess: () => refetch(),
+    // onSuccess: () => refetch(),
   });
   const sortCountriesByLike = (sortType: "asc" | "desc") => {
     refetchSorted();
     setSearchParams({ sort: sortType });
   };
+
   const handleCountryUpvote = (id: string) => {
+    const allCountries = countries?.pages.flatMap((page) => page.rows) || [];
     queryClient.setQueryData(["countries-list"], (oldData: Country[]) => {
       return oldData.map((country) =>
         country.id === id ? { ...country, like: country.like + 1 } : country,
       );
     });
-    if (countries) {
-      mutateUpvote({ id, countries });
+    if (allCountries.length > 0) {
+      mutateUpvote({ id, countries: allCountries });
     }
   };
+
   const handleEdit = (id: string) => {
     setEditId(id);
     setErrors({
@@ -128,7 +131,7 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
     if (!hasError) {
       const country: Country = {
         ...countryFields,
-        id: String(countries && countries.length + 1),
+        id: String(allRows.length + 1),
         like: 0,
         detaildInfo: null,
       };
@@ -146,15 +149,43 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
     }
     mutateUpdateCountry({ id, updates });
   };
+  console.log(`countries is `, countries?.pages[0]);
+
+  const allRows = countries ? countries.pages.flatMap((d) => d.rows) : [];
+  console.log(`All rows are: `, allRows);
+
   const parentRef = useRef<HTMLDivElement>(null);
   const rowVirtualizer = useVirtualizer({
-    count: countries ? countries.length : 0,
+    count: hasNextPage ? allRows.length + 1 : allRows.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 600,
   });
-  if (isLoading) {
-    return <h1>Loading</h1>;
-  }
+
+  // if (isLoading) {
+  //   return <h1>Loading</h1>;
+  // }
+  useEffect(() => {
+    const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse();
+
+    if (!lastItem) {
+      return;
+    }
+
+    if (
+      lastItem.index >= allRows.length - 1 &&
+      hasNextPage &&
+      !isFetchingNextPage
+    ) {
+      fetchNextPage();
+    }
+  }, [
+    hasNextPage,
+    fetchNextPage,
+    allRows.length,
+    isFetchingNextPage,
+    rowVirtualizer,
+  ]);
+
   return (
     <section className={styles.countriesSection}>
       <div className={styles.additional}>
@@ -162,7 +193,7 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
           onCountryCreate={handleCountryCreate}
           errors={errors}
           onEditId={editId}
-          countriesList={countries}
+          countriesList={allRows}
           onCountryUpdate={handleCountryUpdate}
           setEditId={setEditId}
           isPending={isPending}
@@ -178,11 +209,13 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
           }}
         >
           {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+            const isLoaderRow = virtualRow.index > allRows.length - 1;
+            const post = allRows[virtualRow.index];
             let country: Country | undefined;
             if (countriesSorted) {
               country = countriesSorted[virtualRow.index];
             } else {
-              country = countries ? countries[virtualRow.index] : undefined;
+              country = post;
             }
             if (!country) return null;
             return (
@@ -194,30 +227,42 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
                   height: virtualRow.size,
                 }}
               >
-                <button
-                  onClick={() => handleEdit(country.id)}
-                  className={styles.editBtn}
-                >
-                  {lang == "en" ? "edit" : "რედაქტირება"}
-                </button>
-                <div className={styles.countryCard} key={country.id}>
-                  <Link
-                    to={`/${lang}/country/${String(country.id)}`}
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    {children(country)}
-                  </Link>
-                  <div className={styles.likeDelete}>
-                    <Like
-                      country={country}
-                      upVote={() => handleCountryUpvote(country.id)}
-                    />
-                    <Delete
-                      onDeleteCountry={() => handledeleteCountry(country.id)}
-                    />
-                  </div>
-                  <CardFooter link={country.infoLink} />
-                </div>
+                {isLoaderRow ? (
+                  hasNextPage ? (
+                    "Loading more..."
+                  ) : (
+                    "Nothing more to load"
+                  )
+                ) : (
+                  <>
+                    <button
+                      onClick={() => handleEdit(country.id)}
+                      className={styles.editBtn}
+                    >
+                      {lang == "en" ? "edit" : "რედაქტირება"}
+                    </button>
+                    <div className={styles.countryCard} key={country.id}>
+                      <Link
+                        to={`/${lang}/country/${String(country.id)}`}
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        {children(country)}
+                      </Link>
+                      <div className={styles.likeDelete}>
+                        <Like
+                          country={country}
+                          upVote={() => handleCountryUpvote(country.id)}
+                        />
+                        <Delete
+                          onDeleteCountry={() =>
+                            handledeleteCountry(country.id)
+                          }
+                        />
+                      </div>
+                      <CardFooter link={country.infoLink} />
+                    </div>
+                  </>
+                )}
               </div>
             );
           })}
