@@ -4,6 +4,8 @@ import Like from "./likes";
 import Sort from "./btnsSort";
 import Form from "./form";
 import Delete from "./delete";
+import { Page } from "@/info";
+import { QueryData } from "@/info";
 import { Country } from "@/info";
 import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
@@ -14,7 +16,6 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useInfiniteQuery } from "@tanstack/react-query";
 import {
-  // getCountries,
   getCountriesBySort,
   addCountry,
   updateCountry,
@@ -37,14 +38,6 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
     infoLink: { ka: "", en: "" },
     img: { ka: "", en: "" },
   });
-  // const {
-  //   data: countries,
-  //   refetch,
-  //   isLoading,
-  // } = useQuery({
-  //   queryKey: ["countries-list"],
-  //   queryFn: getCountries,
-  // });
   const {
     data: countries,
     isFetchingNextPage,
@@ -52,11 +45,11 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
     hasNextPage,
   } = useInfiniteQuery({
     queryKey: ["countries"],
-    queryFn: () => fetchInfiniteCountries({ per_page: 2 }),
-    getNextPageParam: (lastGroup) => lastGroup.nextOffset,
-    initialPageParam: 0,
+    queryFn: ({ pageParam }) =>
+      fetchInfiniteCountries({ per_page: 2, page: pageParam }),
+    getNextPageParam: (lastGroup) => lastGroup?.nextPage,
+    initialPageParam: 1,
   });
-  console.log(countries);
   const { data: countriesSorted, refetch: refetchSorted } = useQuery({
     queryKey: ["countries-ordered-list", searchParams.get("sort")],
     queryFn: () => {
@@ -68,7 +61,12 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
   // delete country
   const { mutate: mutateDelete } = useMutation({
     mutationFn: (id: string) => deleteCountry(id),
-    // onSuccess: () => refetch(),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["countries"],
+      });
+    },
   });
   // update like in country
   const { mutate: mutateUpvote } = useMutation({
@@ -79,24 +77,44 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
   const { mutate: mutateUpdateCountry } = useMutation({
     mutationFn: ({ id, updates }: { id: string; updates: CountryUpdates }) =>
       updateCountry(id, updates),
-    // onSuccess: () => refetch(),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["countries"],
+      });
+    },
   });
   // create country
   const { mutate: mutateCreateCountry, isPending } = useMutation({
     mutationFn: (country: Country) => addCountry(country),
-    // onSuccess: () => refetch(),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["countries"],
+      });
+    },
   });
   const sortCountriesByLike = (sortType: "asc" | "desc") => {
     refetchSorted();
     setSearchParams({ sort: sortType });
   };
-
   const handleCountryUpvote = (id: string) => {
-    const allCountries = countries?.pages.flatMap((page) => page.rows) || [];
-    queryClient.setQueryData(["countries-list"], (oldData: Country[]) => {
-      return oldData.map((country) =>
-        country.id === id ? { ...country, like: country.like + 1 } : country,
-      );
+    const allCountries =
+      countries?.pages.flatMap((page) => page?.data || []) || [];
+    queryClient.setQueryData(["countries"], (oldData: QueryData) => {
+      const currentData = oldData?.pages || [];
+      const updatedPages = currentData.map((page: Page) => {
+        return {
+          ...page,
+          data: page.data.map((country: Country) =>
+            country.id === id
+              ? { ...country, like: country.like + 1 }
+              : country,
+          ),
+        };
+      });
+
+      return { ...oldData, pages: updatedPages };
     });
     if (allCountries.length > 0) {
       mutateUpvote({ id, countries: allCountries });
@@ -149,10 +167,10 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
     }
     mutateUpdateCountry({ id, updates });
   };
-  console.log(`countries is `, countries?.pages[0]);
 
-  const allRows = countries ? countries.pages.flatMap((d) => d.rows) : [];
-  console.log(`All rows are: `, allRows);
+  const allRows = countries
+    ? countries.pages.flatMap((d) => d?.data || [])
+    : [];
 
   const parentRef = useRef<HTMLDivElement>(null);
   const rowVirtualizer = useVirtualizer({
@@ -161,11 +179,10 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
     estimateSize: () => 600,
   });
 
-  // if (isLoading) {
-  //   return <h1>Loading</h1>;
-  // }
+  const virtualItems = rowVirtualizer.getVirtualItems();
+
   useEffect(() => {
-    const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse();
+    const [lastItem] = [...virtualItems].reverse();
 
     if (!lastItem) {
       return;
@@ -183,7 +200,7 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
     fetchNextPage,
     allRows.length,
     isFetchingNextPage,
-    rowVirtualizer,
+    virtualItems,
   ]);
 
   return (
@@ -208,7 +225,7 @@ const Card: React.FC<CardProps> = ({ children, lang }) => {
             position: "relative",
           }}
         >
-          {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+          {virtualItems.map((virtualRow) => {
             const isLoaderRow = virtualRow.index > allRows.length - 1;
             const post = allRows[virtualRow.index];
             let country: Country | undefined;

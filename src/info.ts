@@ -532,3 +532,11 @@ export interface FormProps {
   setEditId: Dispatch<SetStateAction<string>>;
   isPending: boolean;
 }
+export interface Page {
+  data: Country[];
+}
+
+export interface QueryData {
+  pages: Page[];
+  pageParams: number[];
+}

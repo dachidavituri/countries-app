@@ -8,17 +8,29 @@ export const getCountries = async () => {
     console.log(err);
   }
 };
+
+function getNextPageNumber(relType: string, pagination: string) {
+  const regex = new RegExp(`<[^>]*[?&]_page=(\\d+)[^>]*>; rel="${relType}"`);
+  const match = pagination.match(regex);
+  return match ? parseInt(match[1], 10) : null;
+}
+
 export const fetchInfiniteCountries = async ({
   per_page,
+  page,
 }: {
   per_page: number;
+  page: number;
 }) => {
   try {
-    const response = await httpClient.get(
-      `/countries?_page=1&_limit=${per_page}`,
+    const response = await httpClient.get<Country[]>(
+      `/countries?_page=${page}&_limit=${per_page}`,
     );
 
-    return response.data;
+    return {
+      data: response.data,
+      nextPage: getNextPageNumber("next", response.headers.link),
+    };
   } catch (err) {
     console.log(err);
   }
@@ -36,7 +48,6 @@ export const getCountriesBySort = async (sortType: "asc" | "desc") => {
 export const getCountryById = async (id: string | undefined) => {
   try {
     const response = await httpClient.get<Country>(`/countries/${id}`);
-    console.log(response);
     return response.data;
   } catch (err) {
     console.log(err);
